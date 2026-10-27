@@ -51,8 +51,9 @@ impl Narrator {
         self.synthesizer.device()
     }
 
-    /// Narrate `text` into an MP3 in `out_dir`, and return its path; `None` when the text has
-    /// nothing to say, not even a title (see [`plan`]).
+    /// Narrate `text` into an MP3 and return its path, a generated name in `out_dir/audio` (where
+    /// kuleshov writes it); `None` when the text has nothing to say, not even a title (see
+    /// [`plan`]).
     ///
     /// Every segment is spoken into one WAV, followed by its silence, written as the speech comes so
     /// memory does not grow with the text, then encoded once with `tools` (the profile's encoding,
@@ -76,10 +77,10 @@ impl Narrator {
         let wav = out_dir.join(WAV_NAME);
         let spoken = self.speak(text, &options, &wav, cancel, &mut progress);
         let result = spoken.and_then(|spoken| {
+            check_cancelled(cancel)?;
             if !spoken {
                 return Ok(None);
             }
-            check_cancelled(cancel)?;
             let mut combine = match options.profile {
                 Profile::Standard => CombineOptions::default(),
                 Profile::Retail => retail::combine_options(),
