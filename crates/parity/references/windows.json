@@ -1,0 +1,1781 @@
+{
+  "machine": {
+    "os": "windows",
+    "arch": "x86_64",
+    "threads": 16
+  },
+  "run": {
+    "source": "manuzio 0ec8e8e",
+    "ffmpeg": "ffmpeg version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2000-2026 the FFmpeg developers",
+    "ffprobe": "ffprobe version 9.0.2-essentials_build-www.gyan.dev Copyright (c) 2007-2026 the FFmpeg developers",
+    "scenarios": [
+      {
+        "name": "inputs",
+        "calls": [
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-v",
+              "error",
+              "-y",
+              "-f",
+              "lavfi",
+              "-i",
+              "testsrc2=size=1200x1800:rate=1",
+              "-frames:v",
+              "1",
+              "-q:v",
+              "2",
+              "-fflags",
+              "+bitexact",
+              "-flags",
+              "+bitexact",
+              "{inputs#0}"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-v",
+              "error",
+              "-y",
+              "-f",
+              "lavfi",
+              "-i",
+              "testsrc2=size=2400x1200:rate=1",
+              "-frames:v",
+              "1",
+              "-q:v",
+              "2",
+              "-fflags",
+              "+bitexact",
+              "-flags",
+              "+bitexact",
+              "{inputs#1}"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-v",
+              "error",
+              "-y",
+              "-f",
+              "lavfi",
+              "-i",
+              "aevalsrc=0.4*sin(2*PI*220*t)*(0.6+0.4*sin(PI*t))|0.4*sin(2*PI*277*t):s=48000:d=5",
+              "-c:a",
+              "libopus",
+              "-b:a",
+              "96k",
+              "-fflags",
+              "+bitexact",
+              "-flags",
+              "+bitexact",
+              "{inputs#2}"
+            ]
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{inputs#0}",
+            "bytes": 144340,
+            "sha256": "3d42347ad173341b9b73d899254e299e7ce19881498c308ca1fbc8201241515c",
+            "video_framemd5": "4295b4584652aed43140b5a63c8f26728ffa7418dbe520892763de18c1f6dee2",
+            "frames": 1,
+            "streams": [
+              "stream|index=0|codec_name=mjpeg|profile=Baseline|codec_type=video|codec_tag_string=[0][0][0][0]|width=1200|height=1800|sample_aspect_ratio=1:1|pix_fmt=yuvj420p|level=-99|r_frame_rate=25/1|avg_frame_rate=25/1|time_base=1/25|start_pts=0|duration_ts=1|bit_rate=N/A|nb_frames=N/A",
+              "format|format_name=image2|duration=0.040000|bit_rate=28868000"
+            ]
+          },
+          {
+            "name": "{inputs#1}",
+            "bytes": 182836,
+            "sha256": "4c964411e88004d9b3a31de0a3c354d6dd573746c7dd9cefdfd8ac8ffdfc52fa",
+            "video_framemd5": "01fef9f561628e9417b46ce2c457a399fc70c5675c77c5861aad3b599e1b753a",
+            "frames": 1,
+            "streams": [
+              "stream|index=0|codec_name=mjpeg|profile=Baseline|codec_type=video|codec_tag_string=[0][0][0][0]|width=2400|height=1200|sample_aspect_ratio=1:1|pix_fmt=yuvj420p|level=-99|r_frame_rate=25/1|avg_frame_rate=25/1|time_base=1/25|start_pts=0|duration_ts=1|bit_rate=N/A|nb_frames=N/A",
+              "format|format_name=image2|duration=0.040000|bit_rate=36567200"
+            ]
+          },
+          {
+            "name": "{inputs#2}",
+            "bytes": 77708,
+            "sha256": "74bd4b9775181dbe0790a69643bfd9071f6fbbfb55ff40c93e78e63744efc58e",
+            "audio_md5": "MD5=458d7defa30a49e1db968522c9579301",
+            "streams": [
+              "stream|index=0|codec_name=opus|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=48000|channels=2|channel_layout=stereo|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/48000|start_pts=0|duration_ts=240312|bit_rate=N/A|nb_frames=N/A|extradata_size=19|tag:encoder=Lavc libopus",
+              "format|format_name=ogg|duration=5.006500|bit_rate=124171"
+            ]
+          }
+        ],
+        "files": [
+          "{inputs#0}",
+          "{inputs#1}",
+          "{inputs#2}"
+        ]
+      },
+      {
+        "name": "narration-standard",
+        "calls": [
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-standard\\out\\work\\audio\\{uuid1}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "{work}\\narration-standard\\out\\work\\audio\\{uuid2}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-standard\\out\\work\\audio\\{uuid1}.txt": "file '{work}\\narration-standard\\out\\work\\chapter.wav'",
+              "{work}\\narration-standard\\out\\work\\chapter.wav": "1090844 bytes, SHA-256 85219c1c7578c0812eee312552195336029bae1e6b4a0487d1f8e242a1f5561b"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-standard\\out\\work\\audio\\{uuid3}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "{work}\\narration-standard\\out\\work\\audio\\{uuid4}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-standard\\out\\work\\audio\\{uuid3}.txt": "file '{work}\\narration-standard\\out\\work\\chapter.wav'",
+              "{work}\\narration-standard\\out\\work\\chapter.wav": "2571644 bytes, SHA-256 347a76b0907143b2da0a6e6306864c4d725d0c0626f1dc0f6462592b16d6b873"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{narration-standard#0}",
+            "bytes": 237195,
+            "sha256": "ae9ab26ac700f2ac7c0ec9d2798a0e4be2e46cabad9cb56c0fb844c23f51219a",
+            "audio_md5": "MD5=3e67fcd06ada8ce9b29c82b708c68323",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=320695360|bit_rate=83384|nb_frames=N/A",
+              "format|format_name=mp3|duration=22.725011|bit_rate=83500|tag:encoder=Lavf63.1.102"
+            ]
+          },
+          {
+            "name": "{narration-standard#1}",
+            "bytes": 570239,
+            "sha256": "72d9adeae9126f20deb85baa8131512e3d0306f205fb83e65ea2d81d548655c8",
+            "audio_md5": "MD5=62105d9c660eff455ebc7c9dc1b884e1",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=756050560|bit_rate=85099|nb_frames=N/A",
+              "format|format_name=mp3|duration=53.575011|bit_rate=85149|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{narration-standard#0}",
+          "{narration-standard#1}"
+        ]
+      },
+      {
+        "name": "narration-retail",
+        "calls": [
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-retail\\out\\work\\audio\\{uuid1}.txt",
+              "-f",
+              "lavfi",
+              "-i",
+              "anoisesrc=color=pink:amplitude=0.0020417378:sample_rate=44100",
+              "-filter_complex",
+              "[0:a]aresample=44100,aformat=channel_layouts=mono,adelay=1500:all=1[voice];[voice][1:a]amix=inputs=2:duration=first:normalize=0:dropout_transition=0[mix]",
+              "-map",
+              "[mix]",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-b:a",
+              "192k",
+              "{work}\\narration-retail\\out\\work\\audio\\{uuid2}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-retail\\out\\work\\audio\\{uuid1}.txt": "file '{work}\\narration-retail\\out\\work\\chapter.wav'",
+              "{work}\\narration-retail\\out\\work\\chapter.wav": "1258844 bytes, SHA-256 a9393ecb4d135bfce3f9e66a7f21509e2f7ccd4155e00362e404aefde99167a1"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-retail\\out\\work\\audio\\{uuid3}.txt",
+              "-f",
+              "lavfi",
+              "-i",
+              "anoisesrc=color=pink:amplitude=0.0020417378:sample_rate=44100",
+              "-filter_complex",
+              "[0:a]aresample=44100,aformat=channel_layouts=mono,adelay=1500:all=1[voice];[voice][1:a]amix=inputs=2:duration=first:normalize=0:dropout_transition=0[mix]",
+              "-map",
+              "[mix]",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-b:a",
+              "192k",
+              "{work}\\narration-retail\\out\\work\\audio\\{uuid4}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-retail\\out\\work\\audio\\{uuid3}.txt": "file '{work}\\narration-retail\\out\\work\\chapter.wav'",
+              "{work}\\narration-retail\\out\\work\\chapter.wav": "2739644 bytes, SHA-256 003b4bee128a679cd697e8acad86d6b5e881a9263a48be707d0fa5eecfbc734b"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{narration-retail#0}",
+            "bytes": 667105,
+            "sha256": "6cd72c260106f92190ca57a52c138ba83768142164c9d7aa3dae568f4ff3bda8",
+            "audio_md5": "MD5=fedeae9010e878529a0e90ee2a851fd7",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=391255360|bit_rate=192000|nb_frames=N/A",
+              "format|format_name=mp3|duration=27.725011|bit_rate=192491|tag:encoder=Lavf63.1.102"
+            ]
+          },
+          {
+            "name": "{narration-retail#1}",
+            "bytes": 1407520,
+            "sha256": "f6c4920b40b767d0c0467a76d228246302629fef3fd4112383f55b2defa6c789",
+            "audio_md5": "MD5=5453b5dfffade30800520e09641c9409",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=826610560|bit_rate=192000|nb_frames=N/A",
+              "format|format_name=mp3|duration=58.575011|bit_rate=192234|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{narration-retail#0}",
+          "{narration-retail#1}"
+        ]
+      },
+      {
+        "name": "narration-labelled",
+        "calls": [
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-labelled\\out\\work\\audio\\{uuid1}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "48000",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "-metadata",
+              "comment=AI-generated narration: synthetic voice (Kokoro-82M), made with manuzio",
+              "-metadata",
+              "AIGC={\"Label\":\"1\",\"ContentProducer\":\"manuzio\",\"ProduceID\":\"aafdf2ce8ee85457\"}",
+              "{work}\\narration-labelled\\out\\work\\audio\\{uuid2}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-labelled\\out\\work\\audio\\{uuid1}.txt": "file '{work}\\narration-labelled\\out\\work\\chapter.wav'",
+              "{work}\\narration-labelled\\out\\work\\chapter.wav": "1315244 bytes, SHA-256 d8b5b42ab85f3e909083401eb4dd69194ddfd2b250ea6a7a95d256867498e40e"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-labelled\\out\\work\\audio\\{uuid3}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "48000",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "-metadata",
+              "comment=AI-generated narration: synthetic voice (Kokoro-82M), made with manuzio",
+              "-metadata",
+              "AIGC={\"Label\":\"1\",\"ContentProducer\":\"manuzio\",\"ProduceID\":\"aafdf2ce8ee85457\"}",
+              "{work}\\narration-labelled\\out\\work\\audio\\{uuid4}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-labelled\\out\\work\\audio\\{uuid3}.txt": "file '{work}\\narration-labelled\\out\\work\\chapter.wav'",
+              "{work}\\narration-labelled\\out\\work\\chapter.wav": "2594444 bytes, SHA-256 74f6c178c3c570c06ce8192f38a7c1f731e3e59ee32dd2ed1e21e2fb0ae58c6b"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{narration-labelled#0}",
+            "bytes": 273704,
+            "sha256": "404a6dba6d7af2f0b06afd05d8623ed3f76a81419d23c244c18e281732443c57",
+            "audio_md5": "MD5=d379dbe19dbbd4fed44c599859c58429",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=48000|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=324870|duration_ts=386668800|bit_rate=79755|nb_frames=N/A",
+              "format|format_name=mp3|duration=27.400000|bit_rate=79913|tag:comment=AI-generated narration: synthetic voice (Kokoro-82M), made with manuzio|tag:AIGC={\"Label\":\"1\",\"ContentProducer\":\"manuzio\",\"ProduceID\":\"aafdf2ce8ee85457\"}|tag:encoder=Lavf63.1.102"
+            ]
+          },
+          {
+            "name": "{narration-labelled#1}",
+            "bytes": 559688,
+            "sha256": "60c3932f548162eb383000204c4d241a291cd9ecb0c1ed90af51b10582c8c2f9",
+            "audio_md5": "MD5=c49f40b73338458dd70eae57f166ad16",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=48000|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=324870|duration_ts=762753600|bit_rate=82736|nb_frames=N/A",
+              "format|format_name=mp3|duration=54.050000|bit_rate=82840|tag:comment=AI-generated narration: synthetic voice (Kokoro-82M), made with manuzio|tag:AIGC={\"Label\":\"1\",\"ContentProducer\":\"manuzio\",\"ProduceID\":\"aafdf2ce8ee85457\"}|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{narration-labelled#0}",
+          "{narration-labelled#1}"
+        ]
+      },
+      {
+        "name": "narration-ornaments",
+        "calls": [
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid1}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid2}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid1}.txt": "file '{work}\\narration-ornaments\\out\\work\\chapter.wav'",
+              "{work}\\narration-ornaments\\out\\work\\chapter.wav": "1332044 bytes, SHA-256 0d58218ae20f5beefc3fe4eac1acdcceaab476fb04270a6a4f965b290e64c688"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid3}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid4}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid3}.txt": "file '{work}\\narration-ornaments\\out\\work\\chapter.wav'",
+              "{work}\\narration-ornaments\\out\\work\\chapter.wav": "249644 bytes, SHA-256 3f3665d33714da50da2bcabc13833b7ba26f893e2bf1418e043d0d84580b8eed"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid5}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid6}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-ornaments\\out\\work\\audio\\{uuid5}.txt": "file '{work}\\narration-ornaments\\out\\work\\chapter.wav'",
+              "{work}\\narration-ornaments\\out\\work\\chapter.wav": "284444 bytes, SHA-256 88de1d6a41c12871dead2f7fb8b1b7419657d07cbb97c1642c99befc8e03df02"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{narration-ornaments#0}",
+            "bytes": 278156,
+            "sha256": "135eadfbf40c098231051141afc0cc54897084df38874afd48bb98bee3054ce2",
+            "audio_md5": "MD5=94f7c779b1763ffe3501cf442edba41c",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=391608000|bit_rate=80049|nb_frames=N/A",
+              "format|format_name=mp3|duration=27.750000|bit_rate=80189|tag:encoder=Lavf63.1.102"
+            ]
+          },
+          {
+            "name": "{narration-ornaments#1}",
+            "bytes": 42953,
+            "sha256": "1d5d3c64254072bb2573920f3e07c1a33d7bfe495a7694690372ed52a0a7dfe9",
+            "audio_md5": "MD5=0a5cdd5dace17bdd75f27ee6677f62f3",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=73382400|bit_rate=65378|nb_frames=N/A",
+              "format|format_name=mp3|duration=5.200000|bit_rate=66081|tag:encoder=Lavf63.1.102"
+            ]
+          },
+          {
+            "name": "{narration-ornaments#2}",
+            "bytes": 51169,
+            "sha256": "20b169929aeafb933bf48a27143db25563baf9f03f1e437baf1df57763295459",
+            "audio_md5": "MD5=84b321fac090bcba3c56254ba6d1af9b",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=83613760|bit_rate=68671|nb_frames=N/A",
+              "format|format_name=mp3|duration=5.925011|bit_rate=69088|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{narration-ornaments#0}",
+          "{narration-ornaments#1}",
+          "{narration-ornaments#2}"
+        ]
+      },
+      {
+        "name": "narration-chinese",
+        "calls": [
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-chinese\\out\\work\\audio\\{uuid1}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "{work}\\narration-chinese\\out\\work\\audio\\{uuid2}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-chinese\\out\\work\\audio\\{uuid1}.txt": "file '{work}\\narration-chinese\\out\\work\\chapter.wav'",
+              "{work}\\narration-chinese\\out\\work\\chapter.wav": "502844 bytes, SHA-256 adee1bed8741aac07f9cbb5a07f81d3e6709e48d80b412ae50e7f7a78f5d539a"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\narration-chinese\\out\\work\\audio\\{uuid3}.txt",
+              "-ac",
+              "1",
+              "-ar",
+              "44100",
+              "-acodec",
+              "mp3",
+              "-q:a",
+              "2",
+              "{work}\\narration-chinese\\out\\work\\audio\\{uuid4}.mp3"
+            ],
+            "lists": {
+              "{work}\\narration-chinese\\out\\work\\audio\\{uuid3}.txt": "file '{work}\\narration-chinese\\out\\work\\chapter.wav'",
+              "{work}\\narration-chinese\\out\\work\\chapter.wav": "745244 bytes, SHA-256 3ced1817beb4d24f24109b19883a063b07cda4c46b3ab463788d51079383a107"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{narration-chinese#0}",
+            "bytes": 87126,
+            "sha256": "5de9b5c2b6d47a57756df3dba3a41f53b74d2a73b818a6bde0b7772af4cd806f",
+            "audio_md5": "MD5=6a1f521877fd1a24141d76a8c625aebd",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=147823360|bit_rate=66340|nb_frames=N/A",
+              "format|format_name=mp3|duration=10.475011|bit_rate=66540|tag:encoder=Lavf63.1.102"
+            ]
+          },
+          {
+            "name": "{narration-chinese#1}",
+            "bytes": 125642,
+            "sha256": "ba2b937228e420a46395f4753099c88ceb5f4a6103af2cf58d720160cc1783be",
+            "audio_md5": "MD5=a6e8e79949f33de42fac5b19fa945e18",
+            "streams": [
+              "stream|index=0|codec_name=mp3|profile=unknown|codec_type=audio|codec_tag_string=[0][0][0][0]|sample_fmt=fltp|sample_rate=44100|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/14112000|start_pts=353600|duration_ts=219088960|bit_rate=64538|nb_frames=N/A",
+              "format|format_name=mp3|duration=15.525011|bit_rate=64743|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{narration-chinese#0}",
+          "{narration-chinese#1}"
+        ]
+      },
+      {
+        "name": "trailer-single",
+        "calls": [
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-single\\out\\trailer-work\\narration-0.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-single\\out\\trailer-work\\narration-0.wav": "75884 bytes, SHA-256 caf985d50a59955f91eba889ddf145c34868dee0ed6c245b2efebac0f7f78852"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-single\\out\\trailer-work\\narration-0.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=2.6",
+              "-t",
+              "2.6",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-single\\out\\trailer-work\\{uuid1}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-single\\out\\trailer-work\\narration-0.wav": "75884 bytes, SHA-256 caf985d50a59955f91eba889ddf145c34868dee0ed6c245b2efebac0f7f78852"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#0}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1+(1.25-1)*on/77':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=78:s=1080x1920:fps=30",
+              "-frames:v",
+              "78",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-b:v",
+              "8M",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-single\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-single\\out\\trailer-work\\{uuid2}.mp4",
+              "-i",
+              "{work}\\trailer-single\\out\\trailer-work\\{uuid1}.wav",
+              "-map",
+              "0:v:0",
+              "-map",
+              "1:a:0",
+              "-c:a",
+              "aac",
+              "-t",
+              "2.6",
+              "-c:v",
+              "copy",
+              "{work}\\trailer-single\\out\\trailer-work\\{uuid3}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-single\\out\\trailer-work\\{uuid1}.wav": "124878 bytes, SHA-256 4c991693fdad7ff3b859db00d9667b7bbbb6e171ff9eadea744592c4ae03c778"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{trailer-single#0}",
+            "bytes": 2208752,
+            "sha256": "c65972b9e0c7a85d43de7c7da4d688227707377793381bebab82d92ee2af163b",
+            "audio_md5": "MD5=3795dd8b12c257120214bf614bbc8a53",
+            "video_framemd5": "164fff643cdec790a425d34f08c68e19e885d12a3b94f2522508e3a967212635",
+            "frames": 78,
+            "streams": [
+              "stream|index=0|codec_name=h264|profile=High|codec_type=video|codec_tag_string=avc1|width=1080|height=1920|sample_aspect_ratio=1:1|pix_fmt=yuvj420p|level=40|r_frame_rate=30/1|avg_frame_rate=30/1|time_base=1/15360|start_pts=0|duration_ts=39936|bit_rate=6738984|nb_frames=78|extradata_size=50|tag:language=und|tag:handler_name=VideoHandler|tag:encoder=Lavc63.1.102 libx264",
+              "stream|index=1|codec_name=aac|profile=LC|codec_type=audio|codec_tag_string=mp4a|sample_fmt=fltp|sample_rate=24000|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/24000|start_pts=0|duration_ts=62400|bit_rate=45563|nb_frames=62|extradata_size=5|tag:language=und|tag:handler_name=SoundHandler",
+              "format|format_name=mov,mp4,m4a,3gp,3g2,mj2|duration=2.600000|bit_rate=6796160|tag:major_brand=isom|tag:minor_version=512|tag:compatible_brands=isomiso2avc1mp41|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{trailer-single#0}"
+        ]
+      },
+      {
+        "name": "trailer-music-fades",
+        "calls": [
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-0.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-0.wav": "75884 bytes, SHA-256 caf985d50a59955f91eba889ddf145c34868dee0ed6c245b2efebac0f7f78852"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-0.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=2.6",
+              "-t",
+              "2.6",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid1}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-0.wav": "75884 bytes, SHA-256 caf985d50a59955f91eba889ddf145c34868dee0ed6c245b2efebac0f7f78852"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#0}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1+(1.25-1)*on/77':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=78:s=1080x1920:fps=30,fade=t=out:st=2.1:d=0.5",
+              "-frames:v",
+              "78",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-crf",
+              "23",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-1.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-1.wav": "106604 bytes, SHA-256 5ef75489f4a505af10c0e05e6d5ec82cbf1645aea095526546b36428b6becf53"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-1.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=3.2333333333333334",
+              "-t",
+              "3.2333333333333334",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid3}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-1.wav": "106604 bytes, SHA-256 5ef75489f4a505af10c0e05e6d5ec82cbf1645aea095526546b36428b6becf53"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#1}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1.1':x='(iw-iw/zoom)*on/96':y='(ih-ih/zoom)/2':d=97:s=1080x1920:fps=30,fade=t=in:st=0:d=0.5,fade=t=out:st=2.7333333333333334:d=0.5",
+              "-frames:v",
+              "97",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-crf",
+              "23",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid4}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-2.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-2.wav": "87404 bytes, SHA-256 9ff3115e27f52c3904d2a19a7d87bf2ad4a9da02f9b512280075b35e0722fb14"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-2.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=2.8333333333333335",
+              "-t",
+              "2.8333333333333335",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid5}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\narration-2.wav": "87404 bytes, SHA-256 9ff3115e27f52c3904d2a19a7d87bf2ad4a9da02f9b512280075b35e0722fb14"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#0}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1.25-(1.25-1)*on/84':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=85:s=1080x1920:fps=30,fade=t=in:st=0:d=0.5",
+              "-frames:v",
+              "85",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-crf",
+              "23",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid6}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid7}.txt",
+              "-ar",
+              "24000",
+              "-ac",
+              "1",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid8}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid1}.wav": "124878 bytes, SHA-256 4c991693fdad7ff3b859db00d9667b7bbbb6e171ff9eadea744592c4ae03c778",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid3}.wav": "155278 bytes, SHA-256 7ec7ca3d45bd379b38a1503d8aadbf97bc26777281f6689a0e1ece916f869e17",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid5}.wav": "136078 bytes, SHA-256 2e6c904558f8ec5b332cd8c92c8d8caf251c53a0894dd9f6d28319438738ccf6",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid7}.txt": "file '{work}\\trailer-music-fades\\out\\trailer-work\\{uuid1}.wav'\nfile '{work}\\trailer-music-fades\\out\\trailer-work\\{uuid3}.wav'\nfile '{work}\\trailer-music-fades\\out\\trailer-work\\{uuid5}.wav'"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid8}.wav",
+              "-stream_loop",
+              "-1",
+              "-i",
+              "{inputs#2}",
+              "-filter_complex",
+              "[0:a]aresample=44100,aformat=channel_layouts=stereo[voice];[1:a]aresample=44100,aformat=channel_layouts=stereo,volume=0.3,atrim=0:8.666666666666668,afade=t=in:st=0:d=0.8666666795810065,afade=t=out:st=6.933333307504655:d=1.733333359162013[music];[voice][music]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[mix]",
+              "-map",
+              "[mix]",
+              "-t",
+              "8.666666666666668",
+              "-c:a",
+              "pcm_f32le",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid9}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid8}.wav": "416078 bytes, SHA-256 70f25abeef28d63db2cf7f49d62820918469b72855687e4ce6ac3b808c87d074"
+            }
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid4}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid6}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid10}.ffconcat",
+              "-map",
+              "0:v:0",
+              "-c:v",
+              "copy",
+              "-an",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid11}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid10}.ffconcat": "file '{work}\\trailer-music-fades\\out\\trailer-work\\{uuid2}.mp4'\nfile '{work}\\trailer-music-fades\\out\\trailer-work\\{uuid4}.mp4'\nfile '{work}\\trailer-music-fades\\out\\trailer-work\\{uuid6}.mp4'"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid11}.mp4",
+              "-i",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid9}.wav",
+              "-map",
+              "0:v:0",
+              "-map",
+              "1:a:0",
+              "-c:a",
+              "aac",
+              "-t",
+              "8.666666666666668",
+              "-c:v",
+              "copy",
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid12}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-music-fades\\out\\trailer-work\\{uuid9}.wav": "3057692 bytes, SHA-256 ff0afb66969380f2411992c56cf1f5f1ed35bf78b34185da5c9ada58bc10bc2d"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{trailer-music-fades#0}",
+            "bytes": 1290031,
+            "sha256": "20c874fc60746efe478443641e843a3a585b905a7c925252661af0d4da550165",
+            "audio_md5": "MD5=108f4e8e01b6fc3abdf4a97cbf0325e9",
+            "video_framemd5": "117c95a742959c6fac1517a76c3e403794a12d3b9f93b3b7d3f7ee1cc03cc98e",
+            "frames": 260,
+            "streams": [
+              "stream|index=0|codec_name=h264|profile=High|codec_type=video|codec_tag_string=avc1|width=1080|height=1920|sample_aspect_ratio=1:1|pix_fmt=yuvj420p|level=40|r_frame_rate=30/1|avg_frame_rate=30/1|time_base=1/15360|start_pts=0|duration_ts=133120|bit_rate=1055075|nb_frames=260|extradata_size=51|tag:language=und|tag:handler_name=VideoHandler|tag:encoder=Lavc63.1.102 libx264",
+              "stream|index=1|codec_name=aac|profile=LC|codec_type=audio|codec_tag_string=mp4a|sample_fmt=fltp|sample_rate=44100|channels=2|channel_layout=stereo|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/44100|start_pts=0|duration_ts=382200|bit_rate=125435|nb_frames=375|extradata_size=5|tag:language=und|tag:handler_name=SoundHandler",
+              "format|format_name=mov,mp4,m4a,3gp,3g2,mj2|duration=8.666667|bit_rate=1190797|tag:major_brand=isom|tag:minor_version=512|tag:compatible_brands=isomiso2avc1mp41|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{trailer-music-fades#0}"
+        ]
+      },
+      {
+        "name": "trailer-scenes",
+        "calls": [
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-0.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-0.wav": "106604 bytes, SHA-256 5ef75489f4a505af10c0e05e6d5ec82cbf1645aea095526546b36428b6becf53"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-0.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=3.2333333333333334",
+              "-t",
+              "3.2333333333333334",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid1}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-0.wav": "106604 bytes, SHA-256 5ef75489f4a505af10c0e05e6d5ec82cbf1645aea095526546b36428b6becf53"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#1}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1.1':x='(iw-iw/zoom)*(1-on/96)':y='(ih-ih/zoom)/2':d=97:s=1080x1920:fps=30",
+              "-frames:v",
+              "97",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-b:v",
+              "8M",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-1.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-1.wav": "162284 bytes, SHA-256 c0d46a4c2383b2e32b97f3eeeecdc059d8aa4ef54f81960ceaa2d321e02914cf"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-1.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=4.4",
+              "-t",
+              "4.4",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid3}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-1.wav": "162284 bytes, SHA-256 c0d46a4c2383b2e32b97f3eeeecdc059d8aa4ef54f81960ceaa2d321e02914cf"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#0}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1.25-(1.25-1)*on/131':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=132:s=1080x1920:fps=30",
+              "-frames:v",
+              "132",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-b:v",
+              "8M",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid4}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-2.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-2.wav": "87404 bytes, SHA-256 9ff3115e27f52c3904d2a19a7d87bf2ad4a9da02f9b512280075b35e0722fb14"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-2.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=2.8333333333333335",
+              "-t",
+              "2.8333333333333335",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid5}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\narration-2.wav": "87404 bytes, SHA-256 9ff3115e27f52c3904d2a19a7d87bf2ad4a9da02f9b512280075b35e0722fb14"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#1}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1+(1.25-1)*on/84':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=85:s=1080x1920:fps=30",
+              "-frames:v",
+              "85",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-b:v",
+              "8M",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid6}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid7}.txt",
+              "-ar",
+              "24000",
+              "-ac",
+              "1",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid8}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid1}.wav": "155278 bytes, SHA-256 7ec7ca3d45bd379b38a1503d8aadbf97bc26777281f6689a0e1ece916f869e17",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid3}.wav": "211278 bytes, SHA-256 779664968e7cd1115d63b2f7ded6783fe9208352e7c409ddf6806245916edc71",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid5}.wav": "136078 bytes, SHA-256 2e6c904558f8ec5b332cd8c92c8d8caf251c53a0894dd9f6d28319438738ccf6",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid7}.txt": "file '{work}\\trailer-scenes\\out\\trailer-work\\{uuid1}.wav'\nfile '{work}\\trailer-scenes\\out\\trailer-work\\{uuid3}.wav'\nfile '{work}\\trailer-scenes\\out\\trailer-work\\{uuid5}.wav'"
+            }
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid4}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid6}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid9}.ffconcat",
+              "-map",
+              "0:v:0",
+              "-c:v",
+              "copy",
+              "-an",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid10}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid9}.ffconcat": "file '{work}\\trailer-scenes\\out\\trailer-work\\{uuid2}.mp4'\nfile '{work}\\trailer-scenes\\out\\trailer-work\\{uuid4}.mp4'\nfile '{work}\\trailer-scenes\\out\\trailer-work\\{uuid6}.mp4'"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid10}.mp4",
+              "-i",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid8}.wav",
+              "-map",
+              "0:v:0",
+              "-map",
+              "1:a:0",
+              "-c:a",
+              "aac",
+              "-t",
+              "10.466666666666667",
+              "-c:v",
+              "copy",
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid11}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-scenes\\out\\trailer-work\\{uuid8}.wav": "502478 bytes, SHA-256 1c72a7cf643dce4398fd2feb4e1aac45ce321e644ce6d5e23a7d7bcec4983e19"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{trailer-scenes#0}",
+            "bytes": 6286636,
+            "sha256": "a112c1abca57b159c8131fba3c7f02c8c28b5994da31f1266a292dea927c8b4b",
+            "audio_md5": "MD5=c492f4d613ca8455d78e459c563d762d",
+            "video_framemd5": "b5cac9a2501f9848e94a4f479da51ff00652098475a52abe2541aec6fa3ebe31",
+            "frames": 314,
+            "streams": [
+              "stream|index=0|codec_name=h264|profile=High|codec_type=video|codec_tag_string=avc1|width=1080|height=1920|sample_aspect_ratio=1:1|pix_fmt=yuvj420p|level=40|r_frame_rate=30/1|avg_frame_rate=30/1|time_base=1/15360|start_pts=0|duration_ts=160768|bit_rate=4746518|nb_frames=314|extradata_size=50|tag:language=und|tag:handler_name=VideoHandler|tag:encoder=Lavc63.1.102 libx264",
+              "stream|index=1|codec_name=aac|profile=LC|codec_type=audio|codec_tag_string=mp4a|sample_fmt=fltp|sample_rate=24000|channels=1|channel_layout=mono|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/24000|start_pts=0|duration_ts=251200|bit_rate=50847|nb_frames=247|extradata_size=5|tag:language=und|tag:handler_name=SoundHandler",
+              "format|format_name=mov,mp4,m4a,3gp,3g2,mj2|duration=10.466667|bit_rate=4805071|tag:major_brand=isom|tag:minor_version=512|tag:compatible_brands=isomiso2avc1mp41|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{trailer-scenes#0}"
+        ]
+      },
+      {
+        "name": "trailer-music",
+        "calls": [
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-music\\out\\trailer-work\\narration-0.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\narration-0.wav": "75884 bytes, SHA-256 caf985d50a59955f91eba889ddf145c34868dee0ed6c245b2efebac0f7f78852"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music\\out\\trailer-work\\narration-0.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=2.6",
+              "-t",
+              "2.6",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid1}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\narration-0.wav": "75884 bytes, SHA-256 caf985d50a59955f91eba889ddf145c34868dee0ed6c245b2efebac0f7f78852"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#1}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1.25-(1.25-1)*on/77':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=78:s=1080x1920:fps=30",
+              "-frames:v",
+              "78",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-b:v",
+              "8M",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-music\\out\\trailer-work\\narration-1.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\narration-1.wav": "87404 bytes, SHA-256 9ff3115e27f52c3904d2a19a7d87bf2ad4a9da02f9b512280075b35e0722fb14"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music\\out\\trailer-work\\narration-1.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=2.8333333333333335",
+              "-t",
+              "2.8333333333333335",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid3}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\narration-1.wav": "87404 bytes, SHA-256 9ff3115e27f52c3904d2a19a7d87bf2ad4a9da02f9b512280075b35e0722fb14"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#0}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1.1':x='(iw-iw/zoom)*on/84':y='(ih-ih/zoom)/2':d=85:s=1080x1920:fps=30",
+              "-frames:v",
+              "85",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-b:v",
+              "8M",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid4}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid5}.txt",
+              "-ar",
+              "24000",
+              "-ac",
+              "1",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid6}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid1}.wav": "124878 bytes, SHA-256 4c991693fdad7ff3b859db00d9667b7bbbb6e171ff9eadea744592c4ae03c778",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid3}.wav": "136078 bytes, SHA-256 2e6c904558f8ec5b332cd8c92c8d8caf251c53a0894dd9f6d28319438738ccf6",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid5}.txt": "file '{work}\\trailer-music\\out\\trailer-work\\{uuid1}.wav'\nfile '{work}\\trailer-music\\out\\trailer-work\\{uuid3}.wav'"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid6}.wav",
+              "-stream_loop",
+              "-1",
+              "-i",
+              "{inputs#2}",
+              "-filter_complex",
+              "[0:a]aresample=44100,aformat=channel_layouts=stereo[voice];[1:a]aresample=44100,aformat=channel_layouts=stereo,volume=0.6,atrim=0:5.433333333333334[music];[voice][music]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[mix]",
+              "-map",
+              "[mix]",
+              "-t",
+              "5.433333333333334",
+              "-c:a",
+              "pcm_f32le",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid7}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid6}.wav": "260878 bytes, SHA-256 a79ade26623876dfa8da50fe0395576ac7dc9eac2cdc62207da82359e8d82e19"
+            }
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-select_streams",
+              "v:0",
+              "-show_entries",
+              "stream=codec_name,profile,codec_tag_string,width,height,pix_fmt,level,sample_aspect_ratio,r_frame_rate,avg_frame_rate,time_base,start_time,field_order,color_range,color_space,color_transfer,color_primaries,chroma_location,extradata_hash",
+              "-show_data_hash",
+              "sha256",
+              "-of",
+              "default=noprint_wrappers=1",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid4}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-f",
+              "concat",
+              "-safe",
+              "0",
+              "-i",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid8}.ffconcat",
+              "-map",
+              "0:v:0",
+              "-c:v",
+              "copy",
+              "-an",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid9}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid8}.ffconcat": "file '{work}\\trailer-music\\out\\trailer-work\\{uuid2}.mp4'\nfile '{work}\\trailer-music\\out\\trailer-work\\{uuid4}.mp4'"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid9}.mp4",
+              "-i",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid7}.wav",
+              "-map",
+              "0:v:0",
+              "-map",
+              "1:a:0",
+              "-c:a",
+              "aac",
+              "-t",
+              "5.433333333333334",
+              "-c:v",
+              "copy",
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid10}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-music\\out\\trailer-work\\{uuid7}.wav": "1916972 bytes, SHA-256 824032524f7b98fcb5d8b83f21a22eee43e0a7bb5ee5a4270d80af7794a40cdb"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{trailer-music#0}",
+            "bytes": 3720739,
+            "sha256": "086e3ca65b56b16a35246a85ce2b2c990fd95cbf9fa3bfcd1373a5b430be7849",
+            "audio_md5": "MD5=6926f6fafe9ed6bf69684431d5157759",
+            "video_framemd5": "bbb687788e2eed5b3c102ba76a7272822c8fd97629df26aab198dc933e2d2e69",
+            "frames": 163,
+            "streams": [
+              "stream|index=0|codec_name=h264|profile=High|codec_type=video|codec_tag_string=avc1|width=1080|height=1920|sample_aspect_ratio=1:1|pix_fmt=yuvj420p|level=40|r_frame_rate=30/1|avg_frame_rate=30/1|time_base=1/15360|start_pts=0|duration_ts=83456|bit_rate=5339394|nb_frames=163|extradata_size=50|tag:language=und|tag:handler_name=VideoHandler|tag:encoder=Lavc63.1.102 libx264",
+              "stream|index=1|codec_name=aac|profile=LC|codec_type=audio|codec_tag_string=mp4a|sample_fmt=fltp|sample_rate=44100|channels=2|channel_layout=stereo|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/44100|start_pts=0|duration_ts=239610|bit_rate=127794|nb_frames=235|extradata_size=5|tag:language=und|tag:handler_name=SoundHandler",
+              "format|format_name=mov,mp4,m4a,3gp,3g2,mj2|duration=5.433333|bit_rate=5478389|tag:major_brand=isom|tag:minor_version=512|tag:compatible_brands=isomiso2avc1mp41|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{trailer-music#0}"
+        ]
+      },
+      {
+        "name": "trailer-kokoro",
+        "calls": [
+          {
+            "tool": "ffprobe",
+            "args": [
+              "-v",
+              "error",
+              "-show_entries",
+              "format=duration",
+              "-of",
+              "default=noprint_wrappers=1:nokey=1",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\narration-0.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-kokoro\\out\\trailer-work\\narration-0.wav": "208844 bytes, SHA-256 3871a6b98036ff75a547fc99f5534004c0176411745af82295dedac8c9484946"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\narration-0.wav",
+              "-af",
+              "aresample=24000,aformat=channel_layouts=mono,adelay=500,apad=whole_dur=5.366666666666666",
+              "-t",
+              "5.366666666666666",
+              "-c:a",
+              "pcm_s16le",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid1}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-kokoro\\out\\trailer-work\\narration-0.wav": "208844 bytes, SHA-256 3871a6b98036ff75a547fc99f5534004c0176411745af82295dedac8c9484946"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-loop",
+              "1",
+              "-framerate",
+              "30",
+              "-i",
+              "{inputs#0}",
+              "-vf",
+              "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,setsar=1,scale=4320:7680:flags=bicubic,format=yuv444p,zoompan=z='1+(1.25-1)*on/160':x='(iw-iw/zoom)/2':y='(ih-ih/zoom)/2':d=161:s=1080x1920:fps=30",
+              "-frames:v",
+              "161",
+              "-c:v",
+              "libx264",
+              "-preset",
+              "medium",
+              "-b:v",
+              "8M",
+              "-pix_fmt",
+              "yuv420p",
+              "-an",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid2}.mp4"
+            ]
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid1}.wav",
+              "-stream_loop",
+              "-1",
+              "-i",
+              "{inputs#2}",
+              "-filter_complex",
+              "[0:a]aresample=44100,aformat=channel_layouts=stereo[voice];[1:a]aresample=44100,aformat=channel_layouts=stereo,volume=0.25,atrim=0:5.366666666666666,afade=t=in:st=0:d=1.0733333493272463,afade=t=out:st=3.7566666026910145:d=1.610000063975652[music];[voice][music]amix=inputs=2:duration=first:dropout_transition=0:normalize=0[mix]",
+              "-map",
+              "[mix]",
+              "-t",
+              "5.366666666666666",
+              "-c:a",
+              "pcm_f32le",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid3}.wav"
+            ],
+            "lists": {
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid1}.wav": "257678 bytes, SHA-256 d57b031719fa8eda0fa88fe6c6369db4133b4577c4311b36d650575608a9d629"
+            }
+          },
+          {
+            "tool": "ffmpeg",
+            "args": [
+              "-y",
+              "-i",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid2}.mp4",
+              "-i",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid3}.wav",
+              "-map",
+              "0:v:0",
+              "-map",
+              "1:a:0",
+              "-c:a",
+              "aac",
+              "-t",
+              "5.366666666666666",
+              "-c:v",
+              "copy",
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid4}.mp4"
+            ],
+            "lists": {
+              "{work}\\trailer-kokoro\\out\\trailer-work\\{uuid3}.wav": "1893452 bytes, SHA-256 08c5199498c6ae2a89e798981df27508a3106604810ad5e9520948e9d9e92bff"
+            }
+          }
+        ],
+        "result": {
+          "ok": ""
+        },
+        "outputs": [
+          {
+            "name": "{trailer-kokoro#0}",
+            "bytes": 5228950,
+            "sha256": "752fbb09e1e8405df1c6f7c6ddf60a5567ae16dfa49d9b48fd0d22b0f8a350e0",
+            "audio_md5": "MD5=9f86e77d7b362956df97ecf1cdde9c0f",
+            "video_framemd5": "e54da75451329353a2bb50526127c9e26f184a5e65c76860d05821dd95e61686",
+            "frames": 161,
+            "streams": [
+              "stream|index=0|codec_name=h264|profile=High|codec_type=video|codec_tag_string=avc1|width=1080|height=1920|sample_aspect_ratio=1:1|pix_fmt=yuvj420p|level=40|r_frame_rate=30/1|avg_frame_rate=30/1|time_base=1/15360|start_pts=0|duration_ts=82432|bit_rate=7656360|nb_frames=161|extradata_size=50|tag:language=und|tag:handler_name=VideoHandler|tag:encoder=Lavc63.1.102 libx264",
+              "stream|index=1|codec_name=aac|profile=LC|codec_type=audio|codec_tag_string=mp4a|sample_fmt=fltp|sample_rate=44100|channels=2|channel_layout=stereo|r_frame_rate=0/0|avg_frame_rate=0/0|time_base=1/44100|start_pts=0|duration_ts=236670|bit_rate=126971|nb_frames=233|extradata_size=5|tag:language=und|tag:handler_name=SoundHandler",
+              "format|format_name=mov,mp4,m4a,3gp,3g2,mj2|duration=5.366667|bit_rate=7794707|tag:major_brand=isom|tag:minor_version=512|tag:compatible_brands=isomiso2avc1mp41|tag:encoder=Lavf63.1.102"
+            ]
+          }
+        ],
+        "files": [
+          "{trailer-kokoro#0}"
+        ]
+      }
+    ]
+  }
+}

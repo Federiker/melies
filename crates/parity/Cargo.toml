@@ -1,0 +1,28 @@
+[lints]
+workspace = true
+
+[package]
+name = "melies-parity"
+description = "The cases, recording shim and references that keep melies' output the same as manuzio's"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "melies-record"
+path = "src/bin/melies-record.rs"
+
+[dependencies]
+kempelen-parity = { workspace = true }
+kuleshov_parity = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+zip = { workspace = true }
+
+[dev-dependencies]
+kempelen = { workspace = true }
+kuleshov = { workspace = true }
+melies = { workspace = true }
