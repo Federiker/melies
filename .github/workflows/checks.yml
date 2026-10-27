@@ -1,0 +1,162 @@
+name: Checks
+
+# Two tiers (AGENTS.md, "Tests"). The light tier runs FFmpeg but no model: pushes to main and every
+# pull request run it on Linux and Windows (a branch with a pull request runs once), the platforms
+# with a pinned FFmpeg build. The model tier runs Kokoro on the CPU as well: on pushes to main and
+# on demand only. Security advisories run weekly in advisories.yml, so a new advisory never fails an
+# unrelated push.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Platforms for the light tier
+        type: choice
+        required: true
+        default: all
+        options:
+          - all
+          - windows
+          - linux
+      model:
+        description: Also run the model tier (stages the model and voices from the cache, or downloads them)
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# A newer push to the same branch or pull request cancels its older run; manual runs are kept.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' }}
+
+jobs:
+  light:
+    name: Light tier (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        # Linux and Windows for pushes and pull requests; the chosen platforms for a manual run.
+        os: >-
+          ${{ fromJSON(
+            github.event_name != 'workflow_dispatch' && '["ubuntu-24.04", "windows-2022"]' ||
+            inputs.platform == 'windows' && '["windows-2022"]' ||
+            inputs.platform == 'linux' && '["ubuntu-24.04"]' ||
+            '["ubuntu-24.04", "windows-2022"]'
+          ) }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      # The tools pinned in mise.toml; `mise run` runs its tasks (`mise run ci` runs these steps locally).
+      - uses: jdx/mise-action@v5
+      # The Rust toolchain pinned in rust-toolchain.toml.
+      - run: rustup toolchain install
+      # OpenSSL's headers, for ort-sys' download of ONNX Runtime at build time and the stage
+      # program's downloads.
+      - name: Linux libraries
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libssl-dev
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      # The pins the staged files follow: kuleshov's commit (its FFmpeg builds) and kempelen's (its
+      # model and voices), as Cargo.lock has them.
+      - name: Pinned commits
+        id: pins
+        run: |
+          echo "kuleshov=$(grep -o 'Federiker/kuleshov?rev=[0-9a-f]*' Cargo.lock | head -1 | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+          echo "kempelen=$(grep -o 'Federiker/kempelen?rev=[0-9a-f]*' Cargo.lock | head -1 | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+      # FFmpeg for the tests: the build kuleshov pins, downloaded once per platform and checksum
+      # verified, then restored from the cache until the pin changes.
+      - name: Restore the staged FFmpeg
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools
+            !tools/speech
+          key: ffmpeg-${{ runner.os }}-${{ runner.arch }}-${{ steps.pins.outputs.kuleshov }}
+      # FFmpeg only: the light tier runs no model.
+      - run: mise run stage -- --ffmpeg-only
+      # Quick checks first.
+      - run: mise run fmt
+      - run: mise run spell
+      - run: mise run links
+      - run: mise run machete
+      - run: mise run deny
+      # Then the build and the tests.
+      - run: mise run clippy
+      - run: mise run check
+      # The tests, the parity test's FFmpeg cases with them, with coverage at 90% or more
+      # (MELIES_TOOLS_DIR is tools/, from mise.toml). nextest does not run doctests: they run next.
+      - run: mise run coverage -- --profile ci
+      - run: cargo test --locked --doc -p melies
+      - name: Keep the test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: light-${{ matrix.os }}
+          path: target/llvm-cov-target/nextest/ci/junit.xml
+          if-no-files-found: ignore
+
+  model:
+    name: Model tier (ubuntu-24.04)
+    if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.model) }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: jdx/mise-action@v5
+      - run: rustup toolchain install
+      - name: Linux libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential pkg-config libssl-dev
+      - uses: Swatinem/rust-cache@v2
+        with:
+          save-if: ${{ github.ref == 'refs/heads/main' }}
+      - name: Pinned commits
+        id: pins
+        run: |
+          echo "kuleshov=$(grep -o 'Federiker/kuleshov?rev=[0-9a-f]*' Cargo.lock | head -1 | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+          echo "kempelen=$(grep -o 'Federiker/kempelen?rev=[0-9a-f]*' Cargo.lock | head -1 | cut -d= -f2)" >> "$GITHUB_OUTPUT"
+      - name: Restore the staged FFmpeg
+        uses: actions/cache@v4
+        with:
+          path: |
+            tools
+            !tools/speech
+          key: ffmpeg-${{ runner.os }}-${{ runner.arch }}-${{ steps.pins.outputs.kuleshov }}
+      - name: Restore the speech files
+        uses: actions/cache@v4
+        with:
+          path: tools/speech
+          key: speech-${{ runner.os }}-${{ steps.pins.outputs.kempelen }}
+      # Checks every staged file's SHA-256 and downloads only what is missing or damaged.
+      - run: mise run stage
+      # This runner is not the references' machine, so the parity test skips the Kokoro cases and
+      # says why (docs/parity.md); the other model tests run in full.
+      - name: The model tier
+        run: mise run test:model
+      - name: Keep the test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: model
+          path: target/nextest/model/junit.xml
+          if-no-files-found: ignore
