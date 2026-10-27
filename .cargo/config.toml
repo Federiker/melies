@@ -1,0 +1,11 @@
+[env]
+# The ONNX Runtime build kempelen links (its README, "Optional parts"): pyke's CUDA 12 flavour on
+# 64-bit Windows, whatever CUDA toolkit the machine has. The CPU samples depend on that build, so the
+# parity references hold only with it.
+ORT_CUDA_VERSION = "12"
+
+# Faster local builds. Windows: rust-lld ships with the Rust toolchain and links much faster than
+# Microsoft's link.exe. Linux x86-64 already links with rust-lld since Rust 1.90; macOS uses Apple's
+# fast linker.
+[target.x86_64-pc-windows-msvc]
+linker = "rust-lld.exe"

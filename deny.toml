@@ -1,0 +1,73 @@
+# cargo-deny: licences, bans, sources and security advisories for the Rust dependencies, with every
+# feature. `mise run audit` runs every check; CI runs licences, bans and sources on every push and
+# the advisories weekly. FFmpeg and the Kokoro files are not dependencies: callers supply them, and
+# they keep their own licences (README).
+
+[graph]
+# Optional features count too: the stage program's downloads (kuleshov's `download`, kempelen's
+# `speech-download`) are checked like the rest.
+all-features = true
+
+[advisories]
+# Unmaintained crates count only when a melies crate depends on them directly.
+unmaintained = "workspace"
+yanked = "warn"
+# Each ignored advisory needs its id and the reason, e.g.
+# { id = "RUSTSEC-0000-0000", reason = "..." },
+ignore = [
+  # zip 7, as kempelen and manuzio have it. melies-parity only reads and copies the entries of the
+  # sample book (`by_index`, `raw_copy_file`), and kempelen extracts only behind `cuda-install`,
+  # which melies never enables.
+  { id = "RUSTSEC-2026-0367", reason = "zip 7: concerns ZipArchive::extract, which nothing here calls; fixed by zip 9" },
+  { id = "RUSTSEC-2026-0368", reason = "zip 7: concerns ZipStreamReader::extract, not used; see RUSTSEC-2026-0367" },
+  { id = "RUSTSEC-2026-0369", reason = "zip 7: extract helpers, not used; see RUSTSEC-2026-0367" },
+]
+
+[licenses]
+# Permissive licences only, as in jespersen, kuleshov and kempelen: melies is CC0 and is linked
+# into closed-source programs, so no copyleft, weak or strong. kempelen itself is Apache-2.0, with
+# its NOTICE (misaki, pypinyin, OpenCC, CMUdict), which a program shipping melies passes on. A
+# dependency under any other licence fails until the owner approves it here.
+allow = [
+  "0BSD",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "BSL-1.0",
+  "CC0-1.0",
+  # webpki-roots (Mozilla's root certificates, for the stage program's HTTPS), as manuzio, kuleshov
+  # and kempelen allow it: permissive data licence, no copyleft.
+  "CDLA-Permissive-2.0",
+  "ISC",
+  "MIT",
+  "MIT-0",
+  "Unicode-3.0",
+  "Unlicense",
+  "Zlib",
+]
+confidence-threshold = 0.93
+# The list is the policy, not an inventory: a licence no dependency uses yet is no warning.
+unused-allowed-license = "allow"
+
+[licenses.private]
+# melies' own crates (`publish = false`): CC0 (LICENSE).
+ignore = true
+
+[bans]
+multiple-versions = "warn"
+wildcards = "deny"
+# The workspace's own crates are path dependencies.
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]
+# The owner's own libraries, pinned to a commit: kuleshov (FFmpeg, CC0), kempelen (speech,
+# Apache-2.0) and jespersen (phonemes, CC0), which kempelen pins.
+allow-git = [
+  "https://github.com/Federiker/kuleshov",
+  "https://github.com/Federiker/kempelen",
+  "https://github.com/Federiker/jespersen",
+]

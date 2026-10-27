@@ -1,0 +1,76 @@
+[workspace]
+resolver = "3"
+members = ["crates/*"]
+# The stage program pulls in the download features; `cargo test` and `cargo build` leave it out.
+default-members = ["crates/melies", "crates/parity"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+# The same minor version as rust-toolchain.toml.
+rust-version = "1.94"
+license = "CC0-1.0"
+repository = "https://github.com/Federiker/melies"
+# Never on crates.io: manuzio pins the repository by commit (owner decision, 27 October 2026).
+publish = false
+
+[workspace.dependencies]
+# FFmpeg and FFprobe (CC0), pinned to a commit; bump `rev` to take a newer kuleshov, and
+# kuleshov_parity with it.
+kuleshov = { git = "https://github.com/Federiker/kuleshov", rev = "24cc83ac706ab4a7e3e22dba6a07fd4edb937707" }
+kuleshov_parity = { git = "https://github.com/Federiker/kuleshov", rev = "24cc83ac706ab4a7e3e22dba6a07fd4edb937707" }
+# Kokoro speech (Apache-2.0), pinned to a commit; bump `rev` to take a newer kempelen, and
+# kempelen-parity with it.
+kempelen = { git = "https://github.com/Federiker/kempelen", rev = "b734f36ec02e01ae8d225952aca3aa52e085271a" }
+kempelen-parity = { git = "https://github.com/Federiker/kempelen", rev = "b734f36ec02e01ae8d225952aca3aa52e085271a" }
+melies = { path = "crates/melies" }
+melies-parity = { path = "crates/parity" }
+anyhow = "1.0.100"
+log = "0.4"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.146"
+sha2 = "0.10.9"
+thiserror = "2.0.18"
+tokio = { version = "1.49.0", features = ["rt"] }
+unicode-normalization = "0.1.25"
+uuid = { version = "1.19.0", features = ["v4"] }
+zip = { version = "7.2.0", default-features = false, features = ["deflate"] }
+
+[workspace.lints.rust]
+# Denied rather than forbidden: the benchmark asks Windows for its peak memory, under
+# `#[expect(unsafe_code, reason = ...)]`.
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+# Panics outside tests are explicit (`#[expect(..., reason = ...)]`); tests may unwrap (clippy.toml).
+unwrap_used = "warn"
+expect_used = "warn"
+# Every fallible function returns the one crate error, whose variants say when they happen
+# (docs/errors.md).
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+must_use_candidate = "allow"
+# `melies::Error` holds kuleshov's and kempelen's errors whole, as they give them; errors are rare, and
+# boxing them would only make every caller unwrap a box.
+result_large_err = "allow"
+
+# Less debug info in dev builds and tests: line tables for our crates (enough for backtraces), none
+# for dependencies, which are optimised (Kokoro and jespersen are slow unoptimised).
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+opt-level = 3
+debug = false
+
+# Full debug info for melies' crates in debugger sessions (`cargo build --profile debugging`, used by
+# .vscode/launch.json); line tables only for dependencies. Kept in target/debugging so it never
+# invalidates the everyday dev build.
+[profile.debugging]
+inherits = "dev"
+debug = true
+
+[profile.debugging.package."*"]
+debug = "line-tables-only"

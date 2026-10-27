@@ -1,0 +1,16 @@
+[lints]
+workspace = true
+
+[package]
+name = "melies-stage"
+description = "Stages the pinned FFmpeg and the Kokoro files the tests read, with kuleshov's and kempelen's downloads"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+kempelen = { workspace = true, features = ["speech-download"] }
+kuleshov = { workspace = true, features = ["download"] }
+tokio = { workspace = true }

@@ -1,0 +1,34 @@
+# typos checks spelling in code and docs, in UK English. Every allowed word below says why it is
+# allowed.
+
+[default]
+locale = "en-gb"
+# Other software's names, matched in context so the same words in prose are still checked:
+# FFmpeg's own option names (the music mix's `amix=…:normalize=0`, `anoisesrc=color=pink` and
+# ffprobe's `color_range` in the recorded calls).
+extend-ignore-re = ['normalize=0', 'color=pink', 'color_(range|space|transfer|primaries)']
+
+[default.extend-words]
+# Names other software fixes: serde's Serialize and Deserialize (and `skip_serializing_if`), the
+# sha2 crate's `finalize`, kuleshov's `analyze_audio` and kempelen's `Synthesizer`, `synthesize*`
+# and `tts::Synthesizer` (kept from manuzio's API for its callers), and the unicode-normalization
+# crate (`UnicodeNormalization`).
+serialize = "serialize"
+serialized = "serialized"
+serializing = "serializing"
+finalize = "finalize"
+analyze = "analyze"
+synthesize = "synthesize"
+synthesized = "synthesized"
+synthesizer = "synthesizer"
+normalization = "normalization"
+
+[files]
+extend-exclude = [
+  "*.lock",
+  # The CC0 legal code, as Creative Commons publishes it.
+  "LICENSE",
+  # Recorded from manuzio, compared exactly: argument lists, hashes, and the sample book's texts
+  # as it reads them (US English, with soft hyphens).
+  "crates/parity/references/",
+]

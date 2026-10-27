@@ -1,0 +1,38 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": [
+    "Weekly, grouped dependency updates, as in jespersen, kuleshov and kempelen.",
+    "kuleshov and kempelen (git dependencies pinned by `rev` in Cargo.toml) are bumped by hand: a new commit can change the output, so each bump runs the parity test first (docs/parity.md), and the parity references belong to their pinned FFmpeg build and Kokoro files."
+  ],
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "schedule": ["before 6am on monday"],
+  "minimumReleaseAge": "7 days",
+  "commitMessagePrefix": "[deps]",
+  "commitMessageLowerCase": "never",
+  "labels": ["dependencies"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"]
+  },
+  "packageRules": [
+    {
+      "description": "The owner's libraries: bumped by hand, with the parity test.",
+      "matchManagers": ["cargo"],
+      "matchPackageNames": ["kuleshov", "kuleshov_parity", "kempelen", "kempelen-parity"],
+      "enabled": false
+    },
+    {
+      "groupName": "Rust minor and patch updates",
+      "matchManagers": ["cargo"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
+    {
+      "groupName": "Developer tools (mise)",
+      "matchManagers": ["mise"]
+    },
+    {
+      "groupName": "GitHub Actions",
+      "matchManagers": ["github-actions"]
+    }
+  ]
+}
