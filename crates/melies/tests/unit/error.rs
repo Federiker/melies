@@ -23,3 +23,25 @@ fn errors_name_their_file() {
     assert_eq!(music.file(), Some(Path::new("song.opus")));
     assert_eq!(Error::Cancelled.file(), None);
 }
+
+#[test]
+fn media_and_animation_errors_name_kuleshovs_file() {
+    let io = || kuleshov::Error::Io {
+        path: "clip.mp4".into(),
+        source: io::Error::other("disk full"),
+    };
+    assert_eq!(Error::from(io()).file(), Some(Path::new("clip.mp4")));
+    let animation = Error::Animation {
+        step: 2,
+        source: io(),
+    };
+    assert_eq!(animation.file(), Some(Path::new("clip.mp4")));
+    assert_eq!(
+        animation.to_string(),
+        "Failed to animate the image of step 2"
+    );
+    let speech = Error::from(kempelen::Error::NoSpeech);
+    assert!(matches!(speech, Error::Speech(_)));
+    assert_eq!(speech.file(), None);
+    assert_eq!(Stop.to_string(), "cancelled");
+}

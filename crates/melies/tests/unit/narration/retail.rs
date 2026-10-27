@@ -109,6 +109,11 @@ fn file_names_become_plain_ascii() {
         ascii_stem("Łódź, Þór, Œuvre"),
         Some("Lodz_Thor_OEuvre".into())
     );
+    // Every letter that does not decompose.
+    assert_eq!(
+        ascii_stem("æ ø ł Đ Ð đ ð œ þ ı Ħ ħ Ø"),
+        Some("ae_o_l_D_D_d_d_oe_th_i_H_h_O".into())
+    );
     assert_eq!(ascii_stem("第一章"), None);
     assert_eq!(ascii_stem("Глава 1"), Some("1".into()));
     assert_eq!(ascii_stem("  ...  "), None);

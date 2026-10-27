@@ -100,3 +100,7 @@ fn find(chapter: &str, what: &str) -> io::Result<usize> {
         .find(what)
         .ok_or_else(|| io::Error::other(format!("the chapter has no {what}")))
 }
+
+#[cfg(test)]
+#[path = "../tests/unit/book.rs"]
+mod tests;
