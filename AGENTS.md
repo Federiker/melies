@@ -57,8 +57,8 @@ what they produced:
 - **Model tier** (`mise run test:model`): the `#[ignore]`d tests that run Kokoro on the CPU, reading
   the staged files in `MELIES_SPEECH_DIR`. The parity test's Kokoro cases run only on the references'
   machine and say why elsewhere.
-- Keep coverage at 90 % or more of lines and regions (`mise run coverage`); new code comes with its
-  tests.
+- Keep coverage at 90 % or more of lines and regions over both tiers (`mise run coverage`, which CI's
+  model tier runs: the light tier alone cannot narrate); new code comes with its tests.
 
 ## Conventions
 

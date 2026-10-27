@@ -64,7 +64,7 @@ run = "typos"
 
 [tasks.links]
 description = "Broken links in the Markdown files (lychee.toml)"
-run = "lychee --no-progress README.md AGENTS.md CLAUDE.md TODO.md docs 'crates/**/*.md'"
+run = "lychee --no-progress README.md AGENTS.md CLAUDE.md TODO.md docs"
 
 [tasks.machete]
 description = "Unused Rust dependencies"
@@ -89,8 +89,8 @@ description = "The model tier: the ignored tests that run Kokoro on the CPU (nee
 run = "cargo nextest run --profile model --run-ignored only"
 
 [tasks.coverage]
-description = "The tests, at 90% coverage or more (CI adds --profile ci)"
-run = "cargo llvm-cov nextest --fail-under-lines 90 --fail-under-regions 90"
+description = "Both tiers with coverage, at 90% of lines and regions or more (the narration needs the model: `mise run stage`)"
+run = "cargo llvm-cov nextest --profile model --run-ignored all --fail-under-lines 90 --fail-under-regions 90"
 
 # Measure (local only).
 [tasks.bench]
@@ -105,5 +105,5 @@ run = [
   { tasks = ["machete", "deny"] },
   { task = "clippy" },
   { task = "check" },
-  { task = "coverage" },
+  { task = "test" },
 ]

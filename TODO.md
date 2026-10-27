@@ -16,8 +16,6 @@ one text from manuzio's `mnz-audiobook` and all of `mnz-trailer`, with the same 
     native builds in WSL, two recordings compared, the inputs compared with Windows'.
   - [ ] Blocked: manuzio's crates need OpenSSL's headers to build, and WSL's Ubuntu lacks
     `libssl-dev` (`sudo apt-get install libssl-dev`, the owner's password).
-- [ ] Coverage at 90 %: measure it with both tiers (the narration needs the model), and decide
-  whether CI's model tier enforces it.
 
 ## manuzio
 

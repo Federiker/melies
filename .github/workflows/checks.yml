@@ -97,16 +97,17 @@ jobs:
       # Then the build and the tests.
       - run: mise run clippy
       - run: mise run check
-      # The tests, the parity test's FFmpeg cases with them, with coverage at 90% or more
+      # The tests that need FFmpeg only, the parity test's plans and model-free trailers among them
       # (MELIES_TOOLS_DIR is tools/, from mise.toml). nextest does not run doctests: they run next.
-      - run: mise run coverage -- --profile ci
+      # Coverage needs the narration, so the model tier measures it.
+      - run: cargo nextest run --locked --profile ci
       - run: cargo test --locked --doc -p melies
       - name: Keep the test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: light-${{ matrix.os }}
-          path: target/llvm-cov-target/nextest/ci/junit.xml
+          path: target/nextest/ci/junit.xml
           if-no-files-found: ignore
 
   model:
@@ -149,14 +150,15 @@ jobs:
           key: speech-${{ runner.os }}-${{ steps.pins.outputs.kempelen }}
       # Checks every staged file's SHA-256 and downloads only what is missing or damaged.
       - run: mise run stage
-      # This runner is not the references' machine, so the parity test skips the Kokoro cases and
-      # says why (docs/parity.md); the other model tests run in full.
-      - name: The model tier
-        run: mise run test:model
+      # Both tiers, with coverage at 90% or more. This runner is not the references' machine, so the
+      # parity test skips the Kokoro cases and says why (docs/parity.md); the other model tests run in
+      # full.
+      - name: Both tiers, with coverage
+        run: mise run coverage
       - name: Keep the test results
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: model
-          path: target/nextest/model/junit.xml
+          path: target/llvm-cov-target/nextest/model/junit.xml
           if-no-files-found: ignore

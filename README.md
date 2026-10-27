@@ -121,7 +121,7 @@ MELIES_SPEECH_DIR = "{{config_root}}/../manuzio/assets/tools/tts"
 | `mise run stage` | Stage the pinned FFmpeg and the Kokoro files in `tools/` |
 | `mise run test` | The tests that need FFmpeg only, the parity test's among them |
 | `mise run test:model` | The tests that run Kokoro too (`#[ignore]`d otherwise) |
-| `mise run coverage` | The tests, failing under 90 % of lines or regions |
+| `mise run coverage` | Both tiers with coverage, failing under 90 % of lines or regions |
 | `mise run clippy` | Clippy, warnings denied |
 | `mise run bench` | The narration and trailer benchmark ([docs/performance.md](docs/performance.md)) |
 | `mise run audit` | Dependency advisories, licences and sources |
