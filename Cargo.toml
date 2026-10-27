@@ -34,7 +34,8 @@ thiserror = "2.0.18"
 tokio = { version = "1.49.0", features = ["rt"] }
 unicode-normalization = "0.1.25"
 uuid = { version = "1.19.0", features = ["v4"] }
-zip = { version = "7.2.0", default-features = false, features = ["deflate"] }
+# As kuleshov has it: the parity crate only reads and writes the sample book.
+zip = { version = "9.1.2", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 
 [workspace.lints.rust]
 # Denied rather than forbidden: the benchmark asks Windows for its peak memory, under

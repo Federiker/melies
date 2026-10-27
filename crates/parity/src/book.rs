@@ -30,7 +30,7 @@ pub fn write_book(sample: &Path, book: Book, out: &Path) -> io::Result<()> {
     let mut target = zip::ZipWriter::new(File::create(out)?);
     for index in 0..source.len() {
         let entry = source.by_index(index).map_err(io::Error::other)?;
-        let name = entry.name().to_string();
+        let name = entry.name().map_err(io::Error::other)?.into_owned();
         if !name.starts_with("OEBPS/Text/") {
             target.raw_copy_file(entry).map_err(io::Error::other)?;
             continue;

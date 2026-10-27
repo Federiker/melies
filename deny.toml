@@ -14,14 +14,7 @@ unmaintained = "workspace"
 yanked = "warn"
 # Each ignored advisory needs its id and the reason, e.g.
 # { id = "RUSTSEC-0000-0000", reason = "..." },
-ignore = [
-  # zip 7, as kempelen and manuzio have it. melies-parity only reads and copies the entries of the
-  # sample book (`by_index`, `raw_copy_file`), and kempelen extracts only behind `cuda-install`,
-  # which melies never enables.
-  { id = "RUSTSEC-2026-0367", reason = "zip 7: concerns ZipArchive::extract, which nothing here calls; fixed by zip 9" },
-  { id = "RUSTSEC-2026-0368", reason = "zip 7: concerns ZipStreamReader::extract, not used; see RUSTSEC-2026-0367" },
-  { id = "RUSTSEC-2026-0369", reason = "zip 7: extract helpers, not used; see RUSTSEC-2026-0367" },
-]
+ignore = []
 
 [licenses]
 # Permissive licences only, as in jespersen, kuleshov and kempelen: melies is CC0 and is linked
