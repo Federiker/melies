@@ -31,7 +31,7 @@ the parity test.
   without music or fades; two scenes with music and no fades. And one short trailer narrated by
   Kokoro, with music and music fades.
 
-For each, kuleshov's recording session ([`kuleshov_parity::Session`](https://github.com/Federiker/kuleshov/blob/d3c0e5990b09d31b4d159d2c7632740181de7b34/crates/parity/src/session.rs))
+For each, kuleshov's recording session ([`kuleshov_parity::Session`](https://github.com/Federiker/kuleshov/blob/v0.1.0/crates/parity/src/session.rs))
 keeps every `ffmpeg` and `ffprobe` call with its arguments in order and the contents of the concat
 lists among them, the result, the files returned (bytes, SHA-256, decoded audio `-f md5`, the
 SHA-256 of the decoded video's `-f framemd5` listing, the stream parameters and tags) and the files
@@ -39,7 +39,7 @@ left in the case's folder. Paths, generated UUIDs and FFmpeg's log addresses are
 names them (`{work}`, `{uuid1}`, `{address}`).
 
 melies' recording shim, [melies-record](../crates/parity/src/bin/melies-record.rs), is kuleshov's
-([`kuleshov_parity::Shim`](https://github.com/Federiker/kuleshov/blob/d3c0e5990b09d31b4d159d2c7632740181de7b34/crates/parity/src/shim.rs))
+([`kuleshov_parity::Shim`](https://github.com/Federiker/kuleshov/blob/v0.1.0/crates/parity/src/shim.rs))
 with its `wavs` option: every WAV among the arguments, **or named in a concat list**, is recorded
 by size and SHA-256 under the call's lists. That is how the chapter's WAV, which manuzio deletes
 once the MP3 is encoded, is compared bit for bit.
@@ -58,14 +58,14 @@ the MP3s, as `000.mp3`, `001.mp3`…, in the case's folder.
 ## How they are compared
 
 - Plans: equal, piece for piece (kind, text and pause); melies' `Title` is manuzio's `Heading`.
-- Runs: [`kuleshov_parity::compare`](https://github.com/Federiker/kuleshov/blob/d3c0e5990b09d31b4d159d2c7632740181de7b34/crates/parity/src/compare.rs):
+- Runs: [`kuleshov_parity::compare`](https://github.com/Federiker/kuleshov/blob/v0.1.0/crates/parity/src/compare.rs):
   the same FFmpeg and FFprobe builds, the same calls (so the same WAV hashes), results, leftover
   files, and outputs equal byte for byte. The exception is room tone: FFmpeg's `anoisesrc` is seeded
   at random, so a retail MP3 differs from run to run even from manuzio itself; its calls, and so its
   WAV, must still be equal, and its stream parameters but the bit rate and duration.
 - The Kokoro cases hold only on the machine the references were recorded on: Kokoro's decoder draws
   its noise in an order that follows ONNX Runtime's thread count, and ONNX Runtime's kernels differ by
-  platform ([kempelen's parity notes](https://github.com/Federiker/kempelen/blob/b734f36ec02e01ae8d225952aca3aa52e085271a/docs/parity.md#the-machine)).
+  platform ([kempelen's parity notes](https://github.com/Federiker/kempelen/blob/v0.1.0/docs/parity.md#the-machine)).
   Elsewhere their test says it is skipped and why.
 
 Two recordings from manuzio, one after the other, agreed with each other completely (0 differences,

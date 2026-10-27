@@ -76,8 +76,8 @@ what they produced:
   read `MELIES_TOOLS_DIR` and `MELIES_SPEECH_DIR`.
 - **Never commit FFmpeg, the model, the voices or any media** they make: the tests generate their
   inputs with FFmpeg, and the references are hashes, argument lists and texts.
-- kuleshov and kempelen are pinned by commit in the root `Cargo.toml` (with their parity crates at the
-  same commits). If one of them needs a change, write it down in [TODO.md](TODO.md) for the owner, or
+- kuleshov and kempelen are pinned by release tag in the root `Cargo.toml` (with their parity crates at
+  the same tags; `Cargo.lock` records the commits). If one of them needs a change, write it down in [TODO.md](TODO.md) for the owner, or
   ask whether to make it there; do not copy code around it.
 - Ask before decisions that materially change the public API, the output or the licence (CC0 1.0).
 - Not on crates.io: manuzio pins the repository by commit. Until the first release, APIs need not stay

@@ -79,11 +79,11 @@ enum, `melies::Error` ([docs/errors.md](docs/errors.md)). The whole API:
 
 ### Using it
 
-melies is not on crates.io. Pin the repository by commit, with kuleshov and kempelen at the commits
-its own `Cargo.toml` pins:
+melies is not on crates.io. Pin the repository by a release tag (see Releasing below), with kuleshov
+and kempelen at the tags its own `Cargo.toml` pins:
 
 ```toml
-melies = { git = "https://github.com/Federiker/melies", rev = "<commit>" }
+melies = { git = "https://github.com/Federiker/melies", tag = "v<version>" }
 ```
 
 FFmpeg and the Kokoro files are the program's to supply: kuleshov's `Tools::find_or_download` and
