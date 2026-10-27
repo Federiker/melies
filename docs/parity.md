@@ -76,7 +76,7 @@ the retail cases' WAVs included), and so did both inputs files.
 | --- | --- | --- |
 | `inputs.json` | any platform (the texts and plans) | — |
 | `windows.json` | Windows 11 x64, 16 threads (AMD Ryzen 7 5800H) | gyan.dev 9.0.2 essentials, kuleshov's Windows pin |
-| `linux.json` | not yet ([TODO.md](../TODO.md)): the parity test fails on Linux, naming it | johnvansickle 7.0.2, kuleshov's Linux pin |
+| `linux.json` | Ubuntu in WSL 2 on the same laptop, 16 threads (natively built) | johnvansickle 7.0.2 amd64 static, kuleshov's Linux pin |
 
 The model and voices are kempelen's pins (the 349 MB staged by `mise run stage`, or manuzio's
 `assets/tools/tts`, the same files).
@@ -88,9 +88,10 @@ The model and voices are kempelen's pins (the 349 MB staged by `mise run stage`,
 - `the_narrations_and_the_kokoro_trailer_are_those_manuzio_made` is in the model tier
   (`mise run test:model`) and runs the whole set, Kokoro cases included, on the references' machine.
 
-Both passed at the first run after the port (27 October 2026, Windows, the references' machine): the
-plans of all 17 texts, and all 11 runs, the five narrations' WAVs bit for bit and the Kokoro trailer
-included.
+All passed at the first run after the port (27 October 2026), on Windows and on Linux (WSL), each on
+its references' machine: the plans of all 17 texts, and all 11 runs, the five narrations' WAVs bit for
+bit and the Kokoro trailer included. On Linux, too, two recordings from manuzio agreed completely, and
+their inputs were byte for byte those recorded on Windows.
 
 A change that alters a reference is a change of output: find out why first, and ask the owner before
 recording new references. They are only ever recorded from manuzio, never from melies, and never
@@ -114,6 +115,11 @@ tmp/harness/target/debug/melies-harness target/debug/melies-record ../manuzio/as
 ```
 
 Record twice and compare: nothing may differ.
+
+On Linux, the harness and the shim are built natively in WSL (with a C toolchain and OpenSSL's
+headers, `build-essential` and `libssl-dev`, which manuzio's crates need), with kuleshov's Linux pin
+(`cargo run -p kuleshov --features download --example install_ffmpeg -- <folder>` installs it) and
+manuzio's staged Kokoro files read through `/mnt/c`; the work folder on WSL's own disk.
 
 ## The check in manuzio
 

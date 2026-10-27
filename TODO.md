@@ -7,15 +7,8 @@ one text from manuzio's `mnz-audiobook` and all of `mnz-trailer`, with the same 
 ## Foundation
 
 - [ ] Repository (the owner creates `Federiker/melies` and pushes by hand):
-  - [ ] Checks green on Linux (a push) and Windows (a manual run), once it is on GitHub. Locally the
-    light and model tiers pass on Windows.
-- [ ] Linux references (`crates/parity/references/linux.json`), recorded from manuzio's crates in
-  WSL with kuleshov's Linux pin (johnvansickle 7.0.2), so the parity test runs on Linux; until then
-  it fails there, naming the missing file:
-  - [x] The recording script (`tmp/linux-record.sh`, from Git Bash with `MSYS_NO_PATHCONV=1`):
-    native builds in WSL, two recordings compared, the inputs compared with Windows'.
-  - [ ] Blocked: manuzio's crates need OpenSSL's headers to build, and WSL's Ubuntu lacks
-    `libssl-dev` (`sudo apt-get install libssl-dev`, the owner's password).
+  - [ ] Checks green on Linux (a push) and Windows (a manual run), once it is on GitHub. Locally both
+    tiers pass on Windows, and the parity test (both tiers) on Linux in WSL.
 
 ## manuzio
 
