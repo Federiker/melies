@@ -22,13 +22,6 @@ one text from manuzio's `mnz-audiobook` and all of `mnz-trailer`, with the same 
   - [ ] `TRAILER_TEXT_MIN` and `TRAILER_TEXT_MAX` (`packages/models/src/trailer.ts`) still agree
     with `MIN_TEXT_CHARS` and `MAX_TEXT_CHARS` (40 and 200).
 
-## Changes to suggest upstream (the owner decides)
-
-- [ ] kuleshov: `kuleshov_parity` could offer its recording shim as a library function, recording
-  the WAVs handed to FFmpeg (as arguments or named in concat lists) by size and SHA-256. melies'
-  `melies-record` would then be a two-line binary instead of a copy of `kuleshov-record` with that
-  addition ([decision 19](docs/decisions.md#while-porting-27-october-2026)).
-
 ## From manuzio's TODO: P1, Audiobooks (copied 27 October 2026)
 
 The open items about narration, as manuzio's TODO has them; each says where its work would land.

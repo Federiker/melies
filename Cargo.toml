@@ -17,8 +17,8 @@ publish = false
 [workspace.dependencies]
 # FFmpeg and FFprobe (CC0), pinned to a commit; bump `rev` to take a newer kuleshov, and
 # kuleshov_parity with it.
-kuleshov = { git = "https://github.com/Federiker/kuleshov", rev = "24cc83ac706ab4a7e3e22dba6a07fd4edb937707" }
-kuleshov_parity = { git = "https://github.com/Federiker/kuleshov", rev = "24cc83ac706ab4a7e3e22dba6a07fd4edb937707" }
+kuleshov = { git = "https://github.com/Federiker/kuleshov", rev = "d3c0e5990b09d31b4d159d2c7632740181de7b34" }
+kuleshov_parity = { git = "https://github.com/Federiker/kuleshov", rev = "d3c0e5990b09d31b4d159d2c7632740181de7b34" }
 # Kokoro speech (Apache-2.0), pinned to a commit; bump `rev` to take a newer kempelen, and
 # kempelen-parity with it.
 kempelen = { git = "https://github.com/Federiker/kempelen", rev = "b734f36ec02e01ae8d225952aca3aa52e085271a" }

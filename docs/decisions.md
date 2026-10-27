@@ -58,6 +58,7 @@ The owner's decisions behind melies, and the choices made while porting it, with
 18. **Test tiers**: every test that needs only FFmpeg runs by default (as in kuleshov); those that
     run Kokoro are `#[ignore]`d into the model tier (as in kempelen).
 19. **melies' recording shim is kuleshov's, plus WAV hashes**, so the chapter WAV, handed to FFmpeg
-    in a concat list and deleted after, is compared bit for bit. kuleshov's `kuleshov-record` is a
-    binary that cannot be reused from another workspace, so its fifty lines are copied; see
-    [TODO.md](../TODO.md) for the change to kuleshov that would avoid the copy.
+    in a concat list and deleted after, is compared bit for bit. It was first a copy of
+    `kuleshov-record` with that addition; at the owner's request kuleshov now offers the shim as
+    `kuleshov_parity::Shim` with a `wavs` option (kuleshov's decision 24), and `melies-record` is
+    `Shim { name: "melies-record", wavs: true }.run()`, recording the same calls.

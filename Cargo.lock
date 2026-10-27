@@ -1583,7 +1583,7 @@ dependencies = [
 [[package]]
 name = "kuleshov"
 version = "0.1.0"
-source = "git+https://github.com/Federiker/kuleshov?rev=24cc83ac706ab4a7e3e22dba6a07fd4edb937707#24cc83ac706ab4a7e3e22dba6a07fd4edb937707"
+source = "git+https://github.com/Federiker/kuleshov?rev=d3c0e5990b09d31b4d159d2c7632740181de7b34#d3c0e5990b09d31b4d159d2c7632740181de7b34"
 dependencies = [
  "lzma-rust2 0.24.0",
  "serde",
@@ -1598,7 +1598,7 @@ dependencies = [
 [[package]]
 name = "kuleshov_parity"
 version = "0.1.0"
-source = "git+https://github.com/Federiker/kuleshov?rev=24cc83ac706ab4a7e3e22dba6a07fd4edb937707#24cc83ac706ab4a7e3e22dba6a07fd4edb937707"
+source = "git+https://github.com/Federiker/kuleshov?rev=d3c0e5990b09d31b4d159d2c7632740181de7b34#d3c0e5990b09d31b4d159d2c7632740181de7b34"
 dependencies = [
  "serde",
  "serde_json",
@@ -1725,7 +1725,6 @@ dependencies = [
  "melies",
  "serde",
  "serde_json",
- "sha2 0.10.9",
  "zip",
 ]
 
