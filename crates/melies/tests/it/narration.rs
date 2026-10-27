@@ -107,7 +107,12 @@ fn the_retail_profile_delivers_files_that_pass_the_stores_technical_limits() {
         .expect("the Introduction has text");
     let analysis = analyze_audio(&tools(), &mp3).unwrap();
     assert_eq!(retail::problems(&analysis), Vec::new(), "{analysis:?}");
-    assert_eq!(files(&out), [mp3.file_name().unwrap().to_string_lossy()]);
+    // Only the MP3 is left, where kuleshov writes it (`audio/`): no WAV, no scratch file.
+    assert_eq!(files(&out), ["audio"]);
+    assert_eq!(
+        files(&out.join("audio")),
+        [mp3.file_name().unwrap().to_string_lossy()]
+    );
 }
 
 #[test]
