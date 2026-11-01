@@ -98,6 +98,17 @@ model and voices are not part of melies and keep their own licences.
 
 ## Setup
 
+After cloning, one command takes the clone to a tested state (Bash; on Windows, from Git Bash):
+
+```sh
+./new-folder-who-dis.sh                 # --help for the steps; --skip-ci, --with-models
+```
+
+In order, it runs `scripts/install.sh` (below), installs the C++ toolchain Rust links with if it is
+missing (Windows: the Visual Studio Build Tools' C++ workload and the Windows SDK; Linux: the packages
+CI installs), stages the pinned FFmpeg and runs `mise run ci`. `--with-models` adds the Kokoro files
+(about 349 MB) and the model tier. It is safe to run again; each step below can also be run alone.
+
 On a new machine, `scripts/install.sh` (macOS, Linux, Git Bash) or `scripts\install.bat` (Windows)
 installs mise and the pinned tools ([mise.toml](mise.toml)), the Rust toolchain
 ([rust-toolchain.toml](rust-toolchain.toml)) and the Git hooks. Run it again at any time.
