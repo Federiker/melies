@@ -71,7 +71,7 @@ description = "Unused Rust dependencies"
 run = "cargo machete"
 
 [tasks.deny]
-description = "Licences, bans and sources (advisories run weekly in CI)"
+description = "Licences, bans and sources (advisories: `mise run audit`, or CI's Advisories workflow)"
 run = "cargo deny check licenses bans sources"
 
 [tasks.audit]

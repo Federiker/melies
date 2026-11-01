@@ -1,7 +1,7 @@
 # cargo-deny: licences, bans, sources and security advisories for the Rust dependencies, with every
-# feature. `mise run audit` runs every check; CI runs licences, bans and sources on every push and
-# the advisories weekly. FFmpeg and the Kokoro files are not dependencies: callers supply them, and
-# they keep their own licences (README).
+# feature. `mise run audit` runs every check; CI's manual runs do too, with licences, bans and sources
+# in the Checks workflow and the advisories in their own. FFmpeg and the Kokoro files are not
+# dependencies: callers supply them, and they keep their own licences (README).
 
 [graph]
 # Optional features count too: the stage program's downloads (kuleshov's `download`, kempelen's

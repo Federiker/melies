@@ -7,8 +7,10 @@ one text from manuzio's `mnz-audiobook` and all of `mnz-trailer`, with the same 
 ## Foundation
 
 - [ ] Repository (the owner creates `Federiker/melies` and pushes by hand):
-  - [ ] Checks green on Linux (a push) and Windows (a manual run), once it is on GitHub. Locally both
-    tiers pass on Windows, and the parity test (both tiers) on Linux in WSL.
+  - [ ] Checks green on Linux and Windows (a manual run), once it is on GitHub. Locally both tiers
+    pass on Windows, and the parity test (both tiers) on Linux in WSL.
+  - [ ] Checks' "Pinned commits" step greps `Cargo.lock` for `?rev=`, but the pins are now `?tag=`: the
+    FFmpeg and speech cache keys come out without a pin, so a new pin would not refresh the caches.
 
 ## manuzio
 

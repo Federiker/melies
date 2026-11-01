@@ -139,6 +139,9 @@ MELIES_SPEECH_DIR = "{{config_root}}/../manuzio/assets/tools/tts"
 | `mise run ci` | Everything CI's light tier runs |
 | `mise run tag` | Sets the version, commits it, tags `v<version>` and pushes |
 
+The GitHub Actions workflows run only by hand (Actions, Run workflow): Checks, with a choice of
+platforms and of the model tier, and Advisories. Nothing runs on a push, a pull request or a schedule.
+
 ## Releasing
 
 A release is the tag `v<version>` on `main`, with the version set once in the
@@ -180,7 +183,7 @@ the performance against manuzio's, and the manuzio commit the code was copied fr
 - **on the commit message**, the first line must start with a prefix below;
 - **before a push**, Clippy (`mise run clippy`).
 
-`git commit --no-verify` skips them; CI runs the same checks anyway.
+`git commit --no-verify` skips them; `mise run ci` runs the same checks.
 
 ### Commit messages
 
