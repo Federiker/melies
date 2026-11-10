@@ -1702,7 +1702,7 @@ dependencies = [
 
 [[package]]
 name = "melies"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kempelen",
  "kuleshov",
@@ -1716,7 +1716,7 @@ dependencies = [
 
 [[package]]
 name = "melies-parity"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kempelen",
  "kempelen-parity",
@@ -1730,7 +1730,7 @@ dependencies = [
 
 [[package]]
 name = "melies-stage"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "kempelen",
  "kuleshov",
@@ -1739,7 +1739,7 @@ dependencies = [
 
 [[package]]
 name = "melies-tag"
-version = "0.1.0"
+version = "0.1.1"
 
 [[package]]
 name = "memchr"
