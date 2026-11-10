@@ -21,8 +21,8 @@ kuleshov = { git = "https://github.com/Federiker/kuleshov", tag = "v0.1.0" }
 kuleshov_parity = { git = "https://github.com/Federiker/kuleshov", tag = "v0.1.0" }
 # Kokoro speech (Apache-2.0), pinned to a release tag; bump `tag` to take a newer kempelen, and
 # kempelen-parity with it.
-kempelen = { git = "https://github.com/Federiker/kempelen", tag = "v0.1.0" }
-kempelen-parity = { git = "https://github.com/Federiker/kempelen", tag = "v0.1.0" }
+kempelen = { git = "https://github.com/Federiker/kempelen", tag = "v0.1.1" }
+kempelen-parity = { git = "https://github.com/Federiker/kempelen", tag = "v0.1.1" }
 melies = { path = "crates/melies" }
 melies-parity = { path = "crates/parity" }
 anyhow = "1.0.100"

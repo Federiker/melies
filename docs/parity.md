@@ -65,7 +65,7 @@ the MP3s, as `000.mp3`, `001.mp3`…, in the case's folder.
   WAV, must still be equal, and its stream parameters but the bit rate and duration.
 - The Kokoro cases hold only on the machine the references were recorded on: Kokoro's decoder draws
   its noise in an order that follows ONNX Runtime's thread count, and ONNX Runtime's kernels differ by
-  platform ([kempelen's parity notes](https://github.com/Federiker/kempelen/blob/v0.1.0/docs/parity.md#the-machine)).
+  platform ([kempelen's parity notes](https://github.com/Federiker/kempelen/blob/v0.1.1/docs/parity.md#the-machine)).
   Elsewhere their test says it is skipped and why.
 
 Two recordings from manuzio, one after the other, agreed with each other completely (0 differences,

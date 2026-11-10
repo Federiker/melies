@@ -1551,8 +1551,8 @@ dependencies = [
 
 [[package]]
 name = "kempelen"
-version = "0.1.0"
-source = "git+https://github.com/Federiker/kempelen?tag=v0.1.0#d323cbab7626ffe4e698d4b1939e84235e230dc3"
+version = "0.1.1"
+source = "git+https://github.com/Federiker/kempelen?tag=v0.1.1#7b140b35861854bde290ff807e7abd4c492dad25"
 dependencies = [
  "crustytts-core",
  "crustytts-tokenizer",
@@ -1572,8 +1572,8 @@ dependencies = [
 
 [[package]]
 name = "kempelen-parity"
-version = "0.1.0"
-source = "git+https://github.com/Federiker/kempelen?tag=v0.1.0#d323cbab7626ffe4e698d4b1939e84235e230dc3"
+version = "0.1.1"
+source = "git+https://github.com/Federiker/kempelen?tag=v0.1.1#7b140b35861854bde290ff807e7abd4c492dad25"
 dependencies = [
  "serde",
  "serde_json",
