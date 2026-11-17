@@ -55,6 +55,12 @@ For the narrations, only the narration's own calls are kept: the harness drops t
 report makes on the finished files (`audiobook-parts`), which stay manuzio's, and both sides keep only
 the MP3s, as `000.mp3`, `001.mp3`…, in the case's folder.
 
+manuzio's trailers had no text over the images and were always narrated, so the trailer cases have
+no overlays and `narrate: true`: they check that melies renders such trailers as before. Overlays
+and trailers without narration (melies 0.2.0, [decisions.md](decisions.md), 20 to 25) have no
+reference; their integration tests check them instead, and that a transparent overlay leaves
+kuleshov's pictures exactly as they were.
+
 ## How they are compared
 
 - Plans: equal, piece for piece (kind, text and pause); melies' `Title` is manuzio's `Heading`.

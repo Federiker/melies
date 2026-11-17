@@ -22,7 +22,8 @@ use std::{
 /// Render the trailer with a Kokoro voice from `data` and return the video path.
 ///
 /// The voice is the trailer's, at [`BASE_SPEED`] times the trailer's speed, pronouncing
-/// `input.language`; the model runs on the CPU.
+/// `input.language`; the model runs on the CPU. A trailer without narration
+/// ([`crate::trailer::Trailer::narrate`]) never reads `data`.
 pub fn render_trailer(
     tools: &Tools,
     data: &SpeechData,
@@ -30,6 +31,9 @@ pub fn render_trailer(
     progress: impl FnMut(TrailerProgress),
 ) -> Result<PathBuf> {
     validate(input.trailer, input.images_dir, input.music)?;
+    if !input.trailer.narrate {
+        return render(tools, input, None, progress);
+    }
     let speed = BASE_SPEED * input.trailer.speed;
     let mut synthesizer = Synthesizer::new(data, input.trailer.voice, speed)?;
     synthesizer.read_as(input.language)?;
@@ -46,22 +50,34 @@ pub fn render_trailer(
 ///
 /// This is the whole pipeline minus the voice, so it can be exercised without the model. Work
 /// files live in `out_dir/trailer-work` and are always removed; an existing `trailer.mp4` is
-/// replaced only when the new one is ready.
+/// replaced only when the new one is ready. A trailer without narration
+/// ([`crate::trailer::Trailer::narrate`]) never calls `narrate`.
 pub fn render_with_narrator<E>(
     tools: &Tools,
     input: &TrailerInput<'_>,
     mut narrate: impl FnMut(&str, &Path) -> Result<(), E>,
-    mut progress: impl FnMut(TrailerProgress),
+    progress: impl FnMut(TrailerProgress),
 ) -> Result<PathBuf>
 where
     E: Into<Box<dyn std::error::Error + Send + Sync>>,
 {
+    let mut narrate = |text: &str, wav: &Path| narrate(text, wav).map_err(Into::into);
+    let narrate: Option<&mut Narrate<'_>> = input.trailer.narrate.then_some(&mut narrate);
+    render(tools, input, narrate, progress)
+}
+
+/// The pipeline, narrated by `narrate` or, without one, silent.
+fn render(
+    tools: &Tools,
+    input: &TrailerInput<'_>,
+    narrate: Option<&mut Narrate<'_>>,
+    mut progress: impl FnMut(TrailerProgress),
+) -> Result<PathBuf> {
     validate(input.trailer, input.images_dir, input.music)?;
     let work = input.out_dir.join(WORK_DIR);
     let _ = fs::remove_dir_all(&work);
     fs::create_dir_all(&work).map_err(Error::file_error("create", &work))?;
-    let mut narrate = |text: &str, wav: &Path| narrate(text, wav).map_err(Into::into);
-    let result = assemble(tools, input, &mut narrate, &mut progress, &work);
+    let result = assemble(tools, input, narrate, &mut progress, &work);
     let _ = fs::remove_dir_all(&work);
     let video = result?;
     progress(TrailerProgress::Finished);
@@ -75,7 +91,7 @@ where
 fn assemble(
     tools: &Tools,
     input: &TrailerInput<'_>,
-    narrate: &mut Narrate<'_>,
+    mut narrate: Option<&mut Narrate<'_>>,
     progress: &mut impl FnMut(TrailerProgress),
     work: &Path,
 ) -> Result<PathBuf> {
@@ -109,7 +125,8 @@ fn assemble(
             step,
             &image,
             fades(index),
-            narrate,
+            narrate.as_deref_mut(),
+            trailer.speed,
             work,
             input.cancel,
         )?);

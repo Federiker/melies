@@ -52,9 +52,9 @@ What changes in manuzio when it uses melies (its `SPLITTER-HERE.md`, slice 3):
 | `AudiobookProgress::Speaking { done, of }`, `SegmentFinished` | `NarrationProgress`'s same fields; manuzio adds the chapter's index, total and title |
 | `mnz_tools::ProcessError::Cancelled` after narration | `melies::Error::is_cancelled()` |
 | `mnz_trailer::render_trailer(&input, progress).await` | `melies::trailer::render_trailer(&tools, &speech, &input, progress)`, synchronous |
-| `BookTrailer`, `TrailerStep`, `TrailerMovement` | `trailer::Trailer`, `Step`, `Movement`: mapped field for field (`voice_id` → `voice`); `music_path` is resolved by manuzio as now, `add_text` and `text` are not used (they never were) |
+| `BookTrailer`, `TrailerStep`, `TrailerMovement` | `trailer::Trailer`, `Step`, `Movement`: mapped field for field (`voice_id` → `voice`); `music_path` is resolved by manuzio as now, `add_text` and `text` are not used (they never were); `Step::overlay` is `None` and `Trailer::narrate` `true` for the trailers manuzio made (melies 0.2.0 added them) |
 | `TrailerError::Cancelled` | `melies::Error::Cancelled` (`is_cancelled()`); the other `TrailerError`s are `melies::Error::Trailer(…)`, with the same messages |
-| `is_plain_file_name`, `OUTPUT_NAME`, `MIN_TEXT_CHARS`, `MAX_TEXT_CHARS`, `BASE_SPEED` | the same names in `melies::trailer` |
+| `is_plain_file_name`, `OUTPUT_NAME`, `MIN_TEXT_CHARS`, `MAX_TEXT_CHARS`, `BASE_SPEED` | the same names in `melies::trailer`; `MIN_TEXT_CHARS` is 20 since melies 0.2.0 (manuzio's was 40) |
 | `anyhow::Result` | `melies::Result`; `?` turns it into `anyhow` at manuzio's boundaries |
 
 The messages manuzio shows are kept: the trailer's validation messages ("Step 1 has no image"),

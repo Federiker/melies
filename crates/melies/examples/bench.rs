@@ -261,6 +261,7 @@ fn trailer(tools: &Tools, speech: &SpeechData, images: Option<PathBuf>, music: O
                 image: Some((*image).into()),
                 text: (*text).into(),
                 movement: *movement,
+                overlay: None,
             })
             .collect(),
         voice: VOICE,

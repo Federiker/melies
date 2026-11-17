@@ -1,5 +1,8 @@
 use super::*;
-use crate::{support::Folder, trailer::Step};
+use crate::{
+    support::Folder,
+    trailer::{MAX_OVERLAY_HEIGHT, MAX_OVERLAY_WIDTH, Step},
+};
 use std::fs;
 
 const TEXT: &str = "A girl from Kansas is swept away to a land of wonders.";
@@ -102,6 +105,93 @@ fn enforces_text_length_on_trimmed_characters() {
 }
 
 #[test]
+fn the_text_takes_twenty_to_two_hundred_characters() {
+    assert_eq!((MIN_TEXT_CHARS, MAX_TEXT_CHARS), (20, 200));
+    let dir = folder();
+    let mut t = trailer(&"a".repeat(19), Some("a.jpg"));
+    t.narrate = false;
+    assert_eq!(
+        validate(&t, &dir, None),
+        Err(TrailerError::TextTooShort { step: 1, min: 20 }),
+        "a trailer without narration needs its text too"
+    );
+}
+
+/// A PNG's signature and header chunk, `width` by `height`.
+fn png(width: u32, height: u32) -> Vec<u8> {
+    let mut bytes = b"\x89PNG\r\n\x1a\n\0\0\0\x0dIHDR".to_vec();
+    bytes.extend(width.to_be_bytes());
+    bytes.extend(height.to_be_bytes());
+    bytes.extend([8, 6, 0, 0, 0]);
+    bytes
+}
+
+fn with_overlay(dir: &Folder, name: &str, bytes: Option<&[u8]>) -> Trailer {
+    let image = dir.join(name);
+    if let Some(bytes) = bytes {
+        fs::write(&image, bytes).unwrap();
+    }
+    let mut t = trailer(TEXT, Some("a.jpg"));
+    t.steps.push(Step {
+        image: Some("a.jpg".into()),
+        text: TEXT.into(),
+        overlay: Some(Overlay {
+            image,
+            ..Default::default()
+        }),
+        ..Default::default()
+    });
+    t
+}
+
+#[test]
+fn accepts_an_overlay_up_to_the_largest_size() {
+    let dir = folder();
+    let t = with_overlay(
+        &dir,
+        "text.png",
+        Some(&png(MAX_OVERLAY_WIDTH, MAX_OVERLAY_HEIGHT)),
+    );
+    assert_eq!(validate(&t, &dir, None), Ok(()));
+}
+
+#[test]
+fn rejects_an_overlay_that_is_missing_unreadable_or_too_large() {
+    let dir = folder();
+    for (name, bytes, expected) in [
+        (
+            "missing.png",
+            None,
+            TrailerError::OverlayNotFound { step: 2 },
+        ),
+        (
+            "photo.jpg",
+            Some(b"\xff\xd8\xff\xe0 not a png at all".to_vec()),
+            TrailerError::OverlayUnreadable { step: 2 },
+        ),
+        (
+            "wide.png",
+            Some(png(MAX_OVERLAY_WIDTH + 1, 100)),
+            TrailerError::OverlayTooLarge { step: 2 },
+        ),
+        (
+            "tall.png",
+            Some(png(100, MAX_OVERLAY_HEIGHT + 1)),
+            TrailerError::OverlayTooLarge { step: 2 },
+        ),
+    ] {
+        let t = with_overlay(&dir, name, bytes.as_deref());
+        assert_eq!(validate(&t, &dir, None), Err(expected), "{name}");
+    }
+    // A folder is not an overlay.
+    let t = with_overlay(&dir, "", None);
+    assert_eq!(
+        validate(&t, &dir, None),
+        Err(TrailerError::OverlayNotFound { step: 2 })
+    );
+}
+
+#[test]
 fn rejects_missing_music() {
     let dir = folder();
     assert_eq!(
@@ -173,12 +263,24 @@ fn the_messages_name_the_step() {
             "The image of step 3 was not found",
         ),
         (
-            TrailerError::TextTooShort { step: 1, min: 40 },
-            "Step 1 needs at least 40 characters of text",
+            TrailerError::TextTooShort { step: 1, min: 20 },
+            "Step 1 needs at least 20 characters of text",
         ),
         (
             TrailerError::TextTooLong { step: 1, max: 200 },
             "Step 1 has more than 200 characters of text",
+        ),
+        (
+            TrailerError::OverlayNotFound { step: 2 },
+            "The overlay of step 2 was not found",
+        ),
+        (
+            TrailerError::OverlayUnreadable { step: 1 },
+            "The overlay of step 1 is not a readable PNG image",
+        ),
+        (
+            TrailerError::OverlayTooLarge { step: 4 },
+            "The overlay of step 4 is larger than 900 by 640 pixels",
         ),
         (
             TrailerError::MusicNotFound,

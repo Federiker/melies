@@ -9,6 +9,8 @@
 )]
 
 mod narration;
+mod overlay;
 #[path = "../unit/support.rs"]
 mod support;
 mod trailer;
+mod unnarrated;

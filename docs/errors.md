@@ -10,9 +10,9 @@ The library never uses `anyhow`; manuzio turns the error into its own at its bou
 | `Media(kuleshov::Error)` | FFmpeg or FFprobe failed, or could not be started | kuleshov's, which names the file |
 | `Speech(kempelen::Error)` | The model or a voice could not be loaded, or the synthesis failed (no speech, a language narration cannot read) | kempelen's |
 | `Narration { step, source }` | A trailer narrator failed (the caller's, or Kokoro's) | `Failed to narrate step N` |
-| `Animation { step, source }` | FFmpeg could not animate a step's image | `Failed to animate the image of step N` |
+| `Animation { step, source }` | FFmpeg could not animate a step's image, or draw its overlay (one FFmpeg cannot decode) | `Failed to animate the image of step N` |
 | `Music { music, source }` | FFmpeg could not mix the narration with the music | `ffmpeg failed to mix the music` |
-| `File { action, path, source }` | The work folder could not be made, or the trailer moved into place | `Failed to create …`, `Failed to write …` |
+| `File { action, path, source }` | The work folder could not be made, a silent scene's sound written, or the trailer moved into place | `Failed to create …`, `Failed to write …` |
 
 `error.is_cancelled()` and `error.file()` (the file an error is about: kuleshov's, the music, the
 path) answer the common questions. Cancellation is never reported as another error: a cancelled
@@ -20,7 +20,8 @@ FFmpeg run (`kuleshov::Error::Cancelled`) and a synthesis stopped before a model
 `Error::Interrupted` with melies' own marker) both become `Error::Cancelled`, even inside a step's
 animation or the music mix.
 
-`TrailerError`'s messages, unchanged from manuzio's, because manuzio shows them:
+`TrailerError`'s messages, as manuzio's were (it shows them), with the overlays' added and a
+minimum of 20 characters (17 November 2026):
 
 | `TrailerError` | Message |
 | --- | --- |
@@ -28,8 +29,11 @@ animation or the music mix.
 | `MissingImage { step }` | Step N has no image |
 | `UnsafeImageName { step }` | Step N has an invalid image name |
 | `ImageNotFound { step }` | The image of step N was not found |
-| `TextTooShort { step, min }` | Step N needs at least 40 characters of text |
+| `TextTooShort { step, min }` | Step N needs at least 20 characters of text |
 | `TextTooLong { step, max }` | Step N has more than 200 characters of text |
+| `OverlayNotFound { step }` | The overlay of step N was not found |
+| `OverlayUnreadable { step }` | The overlay of step N is not a readable PNG image (its header, read before rendering) |
+| `OverlayTooLarge { step }` | The overlay of step N is larger than 900 by 640 pixels |
 | `MusicNotFound` | The selected music file was not found |
 | `InvalidSetting(what)` | Invalid trailer setting: speed must be between 0 and 2 (and the others) |
 

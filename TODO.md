@@ -21,8 +21,16 @@ one text from manuzio's `mnz-audiobook` and all of `mnz-trailer`, with the same 
   - [ ] The parity test passes against manuzio's staged FFmpeg and Kokoro files at the pinned commit.
   - [ ] manuzio's adapters checked with `melies-parity`: its reader and heading builder give the
     recorded texts of each case's book (`write_book`), its `BookTrailer` mapping the trailer cases.
-  - [ ] `TRAILER_TEXT_MIN` and `TRAILER_TEXT_MAX` (`packages/models/src/trailer.ts`) still agree
-    with `MIN_TEXT_CHARS` and `MAX_TEXT_CHARS` (40 and 200).
+  - [ ] When manuzio takes melies 0.2.0 or later: its `TRAILER_TEXT_MIN`
+    (`packages/models/src/trailer.ts`) becomes 20, to agree with `MIN_TEXT_CHARS`;
+    `TRAILER_TEXT_MAX` stays 200 (`MAX_TEXT_CHARS`). Its `BookTrailer` mapping sets
+    `Step::overlay: None` and `Trailer::narrate: true` until it offers them.
+
+## kuleshov
+
+- [ ] For the owner: kuleshov could expose its motion filter (or take extra inputs and filters in
+  its motion encode), so melies need not write kuleshov's `motion_filter` again for scenes with an
+  overlay (`trailer/motion.rs`, decision 24). A test keeps the two equal meanwhile.
 
 ## From manuzio's TODO: P1, Audiobooks (copied 27 October 2026)
 

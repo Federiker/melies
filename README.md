@@ -22,12 +22,23 @@ manuzio's own crates produced, argument for argument and bit for bit; a parity t
   usually publish. A labelled narration carries `comment` and `AIGC` tags. Progress is reported per
   piece and before every model chunk, and cancellation stops before the next chunk or stops FFmpeg.
 - **Trailers.** Still images, narration and optional music become a 1080×1920, 30 FPS `trailer.mp4`:
-  each step (40 to 200 characters) is narrated, placed in a silent slot of a whole number of frames,
+  each step (20 to 200 characters) is narrated, placed in a silent slot of a whole number of frames,
   and its image animated for exactly that slot (zooms and pans, optional dips to black encoded in
   each scene's own encode); the scenes are joined without encoding again, the music is mixed sample
   aligned with no intermediate lossy encode, and the result is muxed. The previous video is replaced
   only on success; cancellation stops FFmpeg and removes the work folder.
   `render_with_narrator` takes any narrator, so the pipeline runs without the model.
+- **Text on screen.** A step's optional `Overlay` is a transparent PNG the caller draws (melies
+  draws no text and takes no fonts), at most 900 by 640 pixels (`MAX_OVERLAY_WIDTH`,
+  `MAX_OVERLAY_HEIGHT`), centred across the frame with its middle at `Top` (y = 480), `Middle`
+  (960) or `Bottom` (1382, the default, above social apps' captions). It moves against the image in
+  the scene's own encode: an image zooming in has it zoom out from 1.2 times its size to its own, one
+  zooming out the other way, and a pan has it travel 130 pixels either side of the centre the other
+  way. With `fade` it fades in and out over half a second (a quarter of a shorter scene); the scene's
+  dips to black darken it too.
+- **Without narration** (`narrate: false`), no voice is loaded: each scene lasts as long as its
+  trimmed text takes to read, 14 characters a second times the speed (at least 1.5 s), padded by
+  half a second either side and rounded up to whole frames, and is silent but for the music.
 
 ```rust
 use kempelen::{Language, Voice, assets::SpeechData};
@@ -49,14 +60,23 @@ let mp3 = narrator.narrate(&tools, &text, &options, &out_dir, None, |progress| {
 ```
 
 ```rust
-use melies::trailer::{Movement, Step, Trailer, TrailerInput, render_trailer};
+use melies::trailer::{
+    Movement, Overlay, OverlayPosition, Step, Trailer, TrailerInput, render_trailer,
+};
 
 let trailer = Trailer {
     steps: vec![Step {
         image: Some("cover.jpg".into()),
         text: "A girl from Kansas is swept away to a land of wonders.".into(),
         movement: Movement::ZoomIn,
+        // The step's text, as the program drew it: at most 900×640 pixels, transparent around it.
+        overlay: Some(Overlay {
+            image: "/tmp/myapp/step-1.png".into(),
+            position: OverlayPosition::Bottom,
+            fade: true,
+        }),
     }],
+    narrate: true, // the default; false for silent scenes as long as their texts take to read
     voice: Voice::AfHeart,
     fade_seconds: 0.5,
     ..Trailer::default()

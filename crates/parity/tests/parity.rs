@@ -161,8 +161,12 @@ impl Engine for Melies {
                         "rightToLeft" => Movement::RightToLeft,
                         other => panic!("unknown movement {other}"),
                     },
+                    // manuzio's trailers had no overlays.
+                    overlay: None,
                 })
                 .collect(),
+            // ...and were always narrated.
+            narrate: true,
             voice: parse(case.voice),
             speed: case.speed,
             music_volume: case.music_volume,

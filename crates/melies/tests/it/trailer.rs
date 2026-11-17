@@ -16,14 +16,14 @@ use std::{
 const TEXT: &str = "A girl from Kansas is swept away to a land of wonders.";
 
 /// A folder with the generated images and music (`images/`) and an empty `out/`.
-struct Fixture {
-    images: PathBuf,
+pub(crate) struct Fixture {
+    pub(crate) images: PathBuf,
     out: PathBuf,
     _dir: Folder,
 }
 
 impl Fixture {
-    fn new() -> Self {
+    pub(crate) fn new() -> Self {
         let dir = Folder::new("trailer");
         let (images, out) = (dir.join("images"), dir.join("out"));
         melies_parity::generate_inputs(&tools_dir(), &images).unwrap();
@@ -34,13 +34,13 @@ impl Fixture {
             _dir: dir,
         }
     }
-    fn music(&self) -> PathBuf {
+    pub(crate) fn music(&self) -> PathBuf {
         self.images.join("music.opus")
     }
-    fn out(&self) -> PathBuf {
+    pub(crate) fn out(&self) -> PathBuf {
         self.out.clone()
     }
-    fn input<'a>(
+    pub(crate) fn input<'a>(
         &'a self,
         trailer: &'a Trailer,
         music: Option<&'a Path>,
@@ -58,7 +58,7 @@ impl Fixture {
 }
 
 /// A one-second tone instead of speech.
-fn tone(_text: &str, wav: &Path) -> std::io::Result<()> {
+pub(crate) fn tone(_text: &str, wav: &Path) -> std::io::Result<()> {
     let status = tools()
         .command(Tool::Ffmpeg)
         .args(["-y", "-f", "lavfi", "-i", "sine=frequency=330:duration=1.0"])
@@ -69,15 +69,16 @@ fn tone(_text: &str, wav: &Path) -> std::io::Result<()> {
     Ok(())
 }
 
-fn step(movement: Movement) -> Step {
+pub(crate) fn step(movement: Movement) -> Step {
     Step {
         image: Some("portrait.jpg".into()),
         text: TEXT.into(),
         movement,
+        overlay: None,
     }
 }
 
-fn probe(video: &Path, entries: &str, stream: &str) -> String {
+pub(crate) fn probe(video: &Path, entries: &str, stream: &str) -> String {
     let out = tools()
         .command(Tool::Ffprobe)
         .args([
@@ -96,7 +97,7 @@ fn probe(video: &Path, entries: &str, stream: &str) -> String {
 }
 
 /// The RMS level in dBFS of the video's sound from `start` for `seconds`.
-fn sound_level(video: &Path, start: f64, seconds: f64) -> f64 {
+pub(crate) fn sound_level(video: &Path, start: f64, seconds: f64) -> f64 {
     let out = tools()
         .command(Tool::Ffmpeg)
         .args(["-v", "error", "-ss"])
@@ -119,7 +120,7 @@ fn sound_level(video: &Path, start: f64, seconds: f64) -> f64 {
 }
 
 /// The mean brightness (0-255) of the video's frame at `time`.
-fn frame_brightness(video: &Path, time: f64) -> f64 {
+pub(crate) fn frame_brightness(video: &Path, time: f64) -> f64 {
     let out = tools()
         .command(Tool::Ffmpeg)
         .args(["-v", "error", "-ss"])

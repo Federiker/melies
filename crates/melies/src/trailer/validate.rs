@@ -1,8 +1,11 @@
-use crate::trailer::{Trailer, TrailerError};
+use crate::trailer::{
+    Overlay, Trailer, TrailerError,
+    overlay::{MAX_OVERLAY_HEIGHT, MAX_OVERLAY_WIDTH, png_size},
+};
 use std::path::Path;
 
-/// Fewest characters of narration per scene.
-pub const MIN_TEXT_CHARS: usize = 40;
+/// Fewest characters of text per scene, narrated or not.
+pub const MIN_TEXT_CHARS: usize = 20;
 /// Most characters per scene; about 13 seconds of speech, well under 20.
 pub const MAX_TEXT_CHARS: usize = 200;
 
@@ -43,11 +46,28 @@ pub fn validate(
                 max: MAX_TEXT_CHARS,
             });
         }
+        if let Some(overlay) = &step.overlay {
+            validate_overlay(overlay, step_no)?;
+        }
     }
     if music.is_some_and(|path| !path.is_file()) {
         return Err(TrailerError::MusicNotFound);
     }
     validate_numbers(trailer)
+}
+
+/// An overlay is a PNG, read from its header, of at most [`MAX_OVERLAY_WIDTH`] by
+/// [`MAX_OVERLAY_HEIGHT`] pixels.
+fn validate_overlay(overlay: &Overlay, step: usize) -> Result<(), TrailerError> {
+    if !overlay.image.is_file() {
+        return Err(TrailerError::OverlayNotFound { step });
+    }
+    let (width, height) =
+        png_size(&overlay.image).ok_or(TrailerError::OverlayUnreadable { step })?;
+    if width > MAX_OVERLAY_WIDTH || height > MAX_OVERLAY_HEIGHT {
+        return Err(TrailerError::OverlayTooLarge { step });
+    }
+    Ok(())
 }
 
 fn validate_numbers(trailer: &Trailer) -> Result<(), TrailerError> {

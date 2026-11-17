@@ -1,3 +1,4 @@
+use crate::trailer::{MAX_OVERLAY_HEIGHT, MAX_OVERLAY_WIDTH};
 use std::fmt;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -9,6 +10,9 @@ pub enum TrailerError {
     ImageNotFound { step: usize },
     TextTooShort { step: usize, min: usize },
     TextTooLong { step: usize, max: usize },
+    OverlayNotFound { step: usize },
+    OverlayUnreadable { step: usize },
+    OverlayTooLarge { step: usize },
     MusicNotFound,
     InvalidSetting(&'static str),
 }
@@ -26,6 +30,17 @@ impl fmt::Display for TrailerError {
             Self::TextTooLong { step, max } => {
                 write!(f, "Step {step} has more than {max} characters of text")
             }
+            Self::OverlayNotFound { step } => {
+                write!(f, "The overlay of step {step} was not found")
+            }
+            Self::OverlayUnreadable { step } => {
+                write!(f, "The overlay of step {step} is not a readable PNG image")
+            }
+            Self::OverlayTooLarge { step } => write!(
+                f,
+                "The overlay of step {step} is larger than {MAX_OVERLAY_WIDTH} by \
+{MAX_OVERLAY_HEIGHT} pixels"
+            ),
             Self::MusicNotFound => write!(f, "The selected music file was not found"),
             Self::InvalidSetting(what) => write!(f, "Invalid trailer setting: {what}"),
         }

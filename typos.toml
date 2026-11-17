@@ -5,8 +5,9 @@
 locale = "en-gb"
 # Other software's names, matched in context so the same words in prose are still checked:
 # FFmpeg's own option names (the music mix's `amix=…:normalize=0`, `anoisesrc=color=pink` and
-# ffprobe's `color_range` in the recorded calls).
-extend-ignore-re = ['normalize=0', 'color=pink', 'color_(range|space|transfer|primaries)']
+# ffprobe's `color_range` in the recorded calls, and lavfi's `color=c=…` and `pad=…:color=black@0`
+# in the overlay tests).
+extend-ignore-re = ['normalize=0', 'color=(pink|c=|black@)', 'color_(range|space|transfer|primaries)']
 
 [default.extend-words]
 # Names other software fixes: serde's Serialize and Deserialize (and `skip_serializing_if`), the
