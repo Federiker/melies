@@ -17,8 +17,8 @@ publish = false
 [workspace.dependencies]
 # FFmpeg and FFprobe (CC0), pinned to a release tag; bump `tag` to take a newer kuleshov, and
 # kuleshov_parity with it.
-kuleshov = { git = "https://github.com/Federiker/kuleshov", tag = "v0.1.1" }
-kuleshov_parity = { git = "https://github.com/Federiker/kuleshov", tag = "v0.1.1" }
+kuleshov = { git = "https://github.com/Federiker/kuleshov", tag = "v0.1.2" }
+kuleshov_parity = { git = "https://github.com/Federiker/kuleshov", tag = "v0.1.2" }
 # Kokoro speech (Apache-2.0), pinned to a release tag; bump `tag` to take a newer kempelen, and
 # kempelen-parity with it.
 kempelen = { git = "https://github.com/Federiker/kempelen", tag = "v0.1.1" }
