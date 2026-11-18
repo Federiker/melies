@@ -1582,8 +1582,8 @@ dependencies = [
 
 [[package]]
 name = "kuleshov"
-version = "0.1.0"
-source = "git+https://github.com/Federiker/kuleshov?tag=v0.1.0#ddd01d296760a4ebc7096ac7f08ced1641535020"
+version = "0.1.1"
+source = "git+https://github.com/Federiker/kuleshov?tag=v0.1.1#2fe1d41a707acdc7ab986e3c7f1b2eef2e3990fc"
 dependencies = [
  "lzma-rust2 0.24.0",
  "serde",
@@ -1597,8 +1597,8 @@ dependencies = [
 
 [[package]]
 name = "kuleshov_parity"
-version = "0.1.0"
-source = "git+https://github.com/Federiker/kuleshov?tag=v0.1.0#ddd01d296760a4ebc7096ac7f08ced1641535020"
+version = "0.1.1"
+source = "git+https://github.com/Federiker/kuleshov?tag=v0.1.1#2fe1d41a707acdc7ab986e3c7f1b2eef2e3990fc"
 dependencies = [
  "serde",
  "serde_json",
